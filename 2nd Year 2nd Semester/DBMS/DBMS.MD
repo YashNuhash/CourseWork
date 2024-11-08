@@ -590,6 +590,55 @@ Transforming an E-R diagram into tables requires understanding each relationship
 Here’s a guide on **SQL Commands for Table Operations**, including **table creation**, **record insertion**, **data retrieval with conditions**, and other relevant SQL queries, formatted for a GitHub Markdown file.
 
 ---
+## Note: 
+>
+ >Here’s a visualization of the tables defined in the provided SQL code. The tables **Customer**,  **Employee**, **Teacher**, and **Student** include **primary keys**, **foreign keys**, and **unique constraints** as specified.
+>
+> ---
+>
+> ### Tables
+>
+>| **Customer**       |
+>|--------------------|
+>| **CustomerID** (PK) |
+>| Name              |
+>| Email             |
+>
+>---
+>
+>| **Employee**          |
+>|-----------------------|
+>| **EmployeeID** (PK)   |
+>| Name                 |
+>| ParkingSpotID (Unique, FK to ParkingSpot(ParkingSpotID)) |
+>
+---
+>
+>| **Teacher**           |
+>|-----------------------|
+>| **TeacherID** (PK)    |
+>| Name                 |
+>
+---
+>
+>| **Student**           |
+>|-----------------------|
+>| **StudentID** (PK)    |
+>| Name                 |
+>| TeacherID (FK to Teacher(TeacherID)) |
+>
+>---
+>
+> ### Explanation
+>
+>- **Customer Table**: Holds customer details with `CustomerID` as the primary key.
+>- **Employee Table**: Stores employee details. `EmployeeID` is the primary key, and `ParkingSpotID` has a unique constraint and acts as a foreign key referencing a `ParkingSpot` table (not provided).
+>- **Teacher Table**: Contains teacher details with `TeacherID` as the primary key.
+>- **Student Table**: Holds student information, with `TeacherID` as a foreign key linking each student to a specific teacher in the `Teacher` table.
+>
+> ---
+
+> This layout captures each table’s structure, including primary keys (PK) and foreign keys (FK), according to the provided SQL code.
 
 # SQL Commands for Table Operations
 
