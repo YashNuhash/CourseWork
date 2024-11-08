@@ -744,3 +744,241 @@ Database maintenance is essential for ensuring that a database system runs effic
 Effective **Backup and Recovery** processes protect the database from data loss, while **Performance Tuning** ensures it operates efficiently. Both tasks are essential for maintaining data integrity, ensuring availability, and optimizing performance in any database environment.
 
 ---
+
+Here’s an explanation of **ACID Properties of Transactions** — **Atomicity**, **Consistency**, **Isolation**, and **Durability** — with examples, formatted for a GitHub Markdown file.
+
+---
+
+# ACID Properties of Transactions
+
+The **ACID** properties are a set of principles that ensure database transactions are processed reliably. They are essential for maintaining data integrity, especially in environments where multiple transactions might occur simultaneously. Each ACID property — **Atomicity**, **Consistency**, **Isolation**, and **Durability** — plays a unique role in achieving transaction reliability.
+
+---
+
+## 1. Atomicity
+
+### Overview
+**Atomicity** ensures that each transaction is treated as a single, indivisible unit. This means that either all the operations within the transaction are executed successfully, or none of them are. If any operation within the transaction fails, the entire transaction is rolled back, leaving the database in its original state.
+
+### Example
+Consider a bank transfer where $100 is transferred from Account A to Account B:
+1. Debit $100 from Account A.
+2. Credit $100 to Account B.
+
+If an error occurs after debiting Account A but before crediting Account B, atomicity will roll back the transaction, restoring Account A’s balance, ensuring that no partial transaction occurs.
+
+---
+
+## 2. Consistency
+
+### Overview
+**Consistency** ensures that a transaction brings the database from one valid state to another, adhering to all defined rules (constraints, cascades, triggers). Transactions cannot violate integrity constraints, such as primary keys or foreign keys, ensuring data remains correct and valid.
+
+### Example
+Assume a database has a constraint where each order must be linked to an existing customer. If an application tries to create an order without a valid customer ID, consistency will prevent the transaction from completing, ensuring that all orders are associated with valid customers.
+
+---
+
+## 3. Isolation
+
+### Overview
+**Isolation** ensures that transactions occur independently, without interference from other concurrent transactions. The results of a transaction are invisible to other transactions until it is complete, preventing issues like dirty reads, non-repeatable reads, and phantom reads.
+
+### Isolation Levels
+1. **Read Uncommitted**: Transactions can read data from uncommitted transactions (allows dirty reads).
+2. **Read Committed**: Transactions can only read committed data.
+3. **Repeatable Read**: Ensures consistent reads of data for the duration of the transaction.
+4. **Serializable**: The highest isolation level, where transactions are fully isolated and appear to run sequentially.
+
+### Example
+Consider two transactions:
+- **Transaction 1**: Reads the balance of Account A and transfers $50 to Account B.
+- **Transaction 2**: Reads the balance of Account A to apply interest.
+
+If Transaction 1 is processing, isolation prevents Transaction 2 from reading the intermediate balance of Account A, avoiding potential inconsistencies in calculating interest.
+
+---
+
+## 4. Durability
+
+### Overview
+**Durability** ensures that once a transaction is committed, its changes are permanently saved in the database, even in the event of a system crash. This is achieved by writing the transaction data to non-volatile storage.
+
+### Example
+After a successful bank transfer from Account A to Account B, durability guarantees that the debited and credited amounts are permanently recorded. Even if the database server crashes afterward, the transaction data will persist and be restored upon system recovery.
+
+---
+
+## Summary Table
+
+| ACID Property | Description | Example |
+|---------------|-------------|---------|
+| **Atomicity** | Ensures all-or-nothing execution | A bank transfer transaction either completes fully or is rolled back. |
+| **Consistency** | Maintains data validity according to constraints | Prevents orders from being created without a valid customer ID. |
+| **Isolation** | Keeps transactions independent from each other | Prevents simultaneous transactions from interfering with each other, such as reading uncommitted data. |
+| **Durability** | Ensures committed changes are permanent | Ensures a completed bank transfer is saved permanently, even after a crash. |
+
+---
+
+## Conclusion
+
+The ACID properties are foundational to database transaction management. **Atomicity**, **Consistency**, **Isolation**, and **Durability** work together to ensure that transactions are processed reliably and data integrity is maintained, even in complex, concurrent environments.
+
+---
+
+Here’s an explanation of **Conflict Serializability in Concurrent Scheduling** and how **Reordering Operations for Serial Equivalence** works, formatted for a GitHub Markdown file.
+
+---
+
+# Conflict Serializability in Concurrent Scheduling
+
+In database management, **conflict serializability** is a crucial concept in concurrency control that ensures transactions can be executed concurrently without leading to inconsistent data states. Conflict serializability is achieved by reordering operations in concurrent transactions to achieve a **serially equivalent** schedule, meaning the outcome is the same as if the transactions had been executed in some sequential (serial) order.
+
+---
+
+## What is Conflict Serializability?
+
+### Definition
+**Conflict serializability** states that a schedule (sequence of operations from multiple transactions) is conflict-serializable if it can be transformed into a serial schedule by swapping non-conflicting operations. A serial schedule is one where transactions are executed sequentially, with no interleaving. Conflict serializability guarantees that even when transactions are interleaved, the outcome is consistent with some serial order.
+
+### Conflicting Operations
+Two operations conflict if:
+1. They belong to different transactions.
+2. They operate on the same data item.
+3. At least one of them is a **write** operation.
+
+### Examples of Conflicting Operations
+- **Write-Write Conflict**: Two transactions try to write to the same data item.
+- **Read-Write Conflict**: One transaction reads a data item while another writes to it.
+- **Write-Read Conflict**: One transaction writes to a data item while another reads it.
+
+### Non-Conflicting Operations
+If two operations are from different transactions and do not access the same data item (or both operations are reads), they do not conflict and can be reordered.
+
+---
+
+## Achieving Conflict Serializability by Reordering Operations
+
+To ensure a schedule is conflict-serializable, we can reorder non-conflicting operations to create an equivalent serial schedule without altering the final outcome of the transactions.
+
+### Steps to Check for Conflict Serializability
+1. **Create a Precedence Graph (Dependency Graph)**:
+   - Each transaction is a node in the graph.
+   - A directed edge from Transaction T1 to Transaction T2 is added if T1’s operation precedes and conflicts with T2’s operation on the same data item.
+   
+2. **Check for Cycles**:
+   - If the precedence graph has a cycle, the schedule is **not conflict-serializable**.
+   - If the precedence graph is acyclic, the schedule is conflict-serializable, and a serial order can be determined from the graph.
+
+### Example of Conflict Serializability
+
+Consider two transactions **T1** and **T2** with the following operations on data item `X`:
+
+- **T1**: `Read(X)`, `Write(X)`
+- **T2**: `Write(X)`
+
+#### Schedule
+```
+T1: Read(X) → T2: Write(X) → T1: Write(X)
+```
+
+#### Steps to Determine Conflict Serializability
+1. **Identify Conflicts**:
+   - `T1: Read(X)` and `T2: Write(X)` conflict (Read-Write conflict).
+   - `T2: Write(X)` and `T1: Write(X)` conflict (Write-Write conflict).
+
+2. **Build the Precedence Graph**:
+   - Add an edge from **T1 to T2** (for `Read(X)` preceding `Write(X)` in T2).
+   - Add an edge from **T2 to T1** (for `Write(X)` preceding `Write(X)` in T1).
+
+3. **Check for Cycles**:
+   - There is a cycle between T1 and T2, so this schedule is **not conflict-serializable**.
+
+---
+
+## Conclusion
+
+**Conflict Serializability** is a method to ensure consistent outcomes in concurrent transactions by reordering non-conflicting operations to match a serial schedule. By using tools like precedence graphs, it is possible to analyze a schedule’s conflict serializability and determine if a serial equivalent order exists. Ensuring conflict serializability helps maintain data integrity and consistency in multi-transaction environments.
+
+---
+
+Here’s an explanation of **Partial Commit and System Failure Handling** in databases and the **DBMS Mechanisms to Ensure Data Consistency**, formatted for a GitHub Markdown file.
+
+---
+
+# Partial Commit and System Failure Handling in DBMS
+
+In database systems, **partial commits** and **system failures** are crucial scenarios that must be managed to ensure data consistency and reliability. A **partial commit** occurs when some operations within a transaction are successfully completed, but the transaction as a whole is not fully committed due to system failure or another issue. DBMS provides mechanisms to handle such cases, ensuring the integrity of the database even when failures occur.
+
+---
+
+## Partial Commit
+
+### Definition
+A **partial commit** happens when a transaction successfully completes some of its operations, but the entire transaction has not yet been committed. A partial commit can result from either:
+- A temporary system issue (e.g., power failure) interrupting the transaction.
+- A logical failure within the transaction itself (e.g., failed conditions or validation checks).
+
+### Importance of Handling Partial Commits
+Partial commits can leave the database in an inconsistent state, as only part of the transaction’s operations have been applied. To prevent this, the database must ensure that the incomplete transaction is either fully completed or fully rolled back to maintain a consistent state.
+
+---
+
+## System Failure Handling
+
+**System failures** can interrupt transactions and affect the overall consistency of the database. Failures can occur due to hardware issues, software bugs, or unexpected shutdowns. DBMS mechanisms are designed to manage these failures, ensuring that transactions maintain ACID properties and that the database can recover to a consistent state.
+
+### Types of Failures
+1. **Transaction Failure**: Occurs when a transaction cannot complete due to logical errors, deadlocks, or validation checks.
+2. **System Crash**: Happens when the DBMS software or hardware fails, interrupting all ongoing transactions.
+3. **Media Failure**: Refers to storage device issues, such as disk crashes, that may lead to data corruption.
+
+---
+
+## DBMS Mechanisms to Ensure Data Consistency
+
+### 1. Transaction Logging (Write-Ahead Logging - WAL)
+**Write-Ahead Logging (WAL)** is a technique where the database logs all modifications before applying them to the database. This ensures that:
+- In case of a failure, the database can use the log to undo incomplete transactions or redo committed ones.
+- **WAL** ensures that no changes are applied permanently until they are safely logged.
+
+#### Example
+If Transaction T1 modifies a record, it first writes this change to the log. In case of a system crash, the log helps restore the data, either by completing (redoing) T1 if it was committed or undoing it if not.
+
+### 2. Checkpoints
+**Checkpoints** periodically save the current state of the database to stable storage. During recovery, the system can use the latest checkpoint as a starting point, reducing the number of operations it needs to replay from logs.
+
+#### Example
+The DBMS takes a checkpoint every 10 minutes. In case of a failure, the system only needs to apply or roll back transactions from that checkpoint onward, making recovery faster and more efficient.
+
+### 3. Shadow Paging
+**Shadow Paging** uses a copy of the database page to implement atomicity. Any changes are applied to a shadow page rather than the actual page. Only when the transaction is fully committed is the shadow page swapped with the original, ensuring that no partial updates are applied.
+
+#### Example
+If a transaction is modifying a page, it first creates a shadow copy. Once the transaction commits, the shadow page becomes the active page. If there’s a crash before committing, the original page remains unchanged, preserving data integrity.
+
+### 4. Deferred and Immediate Update Protocols
+   - **Deferred Update**: Delays any modifications to the database until the transaction reaches the commit point. If a failure occurs before the commit, no changes are made, ensuring atomicity.
+   - **Immediate Update**: Applies changes to the database immediately but uses logs to undo or redo changes in case of failure.
+
+#### Example
+In a deferred update scenario, a transaction modifies multiple records, but changes are held back until a successful commit. If the transaction fails, no updates occur, leaving the database consistent.
+
+---
+
+## Summary Table
+
+| Mechanism            | Purpose                                      | Description |
+|----------------------|----------------------------------------------|-------------|
+| **Write-Ahead Logging (WAL)**  | Ensures all changes are logged before applied | Logs each operation to enable rollback or redo during recovery |
+| **Checkpoints**      | Saves current state periodically             | Reduces recovery time by using the latest checkpoint during restart |
+| **Shadow Paging**    | Maintains atomicity through page copies      | Uses shadow pages to ensure original data remains intact if transaction fails |
+| **Deferred/Immediate Update** | Controls when updates are applied    | Uses different timings for applying changes to ensure consistency |
+
+---
+
+## Conclusion
+
+Handling **partial commits** and **system failures** is vital for maintaining database consistency. Mechanisms like **Write-Ahead Logging**, **Checkpoints**, **Shadow Paging**, and **Deferred/Immediate Update Protocols** help databases recover from failures and maintain reliable data states. By implementing these techniques, a DBMS ensures data integrity and reliability, even under unexpected conditions.
+
+---
