@@ -469,8 +469,403 @@ Mapping constraints define the nature of relationships between entities in E-R d
 ---
 
 
+Here’s a summary of **Transforming E-R Diagrams to Tables** by mapping entities and relationships to tables based on cardinality, formatted for a GitHub Markdown file.
+
+---
+
+# Transformation of E-R Diagram to Tables
+
+Converting an E-R diagram into a relational database schema involves creating tables that represent **entities** and **relationships**. The process varies based on the **cardinality** of relationships in the E-R diagram, including **one-to-one**, **one-to-many**, and **many-to-many** mappings.
+
+---
+
+## Mapping Entities to Tables
+
+Each **entity** in the E-R diagram is represented as a table in the database schema. Each table should include:
+- **Primary Key** to uniquely identify records.
+- **Attributes** of the entity as columns.
+
+### Example
+For an entity `Customer` with attributes `CustomerID`, `Name`, and `Email`, we create a `Customer` table with the same attributes.
+
+```sql
+CREATE TABLE Customer (
+    CustomerID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Email VARCHAR(50)
+);
+```
+
+---
+
+## Mapping Relationships Based on Cardinality
+
+### 1. One-to-One (1:1) Relationships
+
+For a **one-to-one relationship**, add a foreign key to one of the tables, referencing the primary key of the related table. This approach links each record in one table to exactly one record in the other table.
+
+#### Example
+If an `Employee` has one `ParkingSpot`, we add `ParkingSpotID` as a foreign key in the `Employee` table.
+
+```sql
+CREATE TABLE Employee (
+    EmployeeID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    ParkingSpotID INT UNIQUE,
+    FOREIGN KEY (ParkingSpotID) REFERENCES ParkingSpot(ParkingSpotID)
+);
+```
+
+---
+
+### 2. One-to-Many (1:N) Relationships
+
+For a **one-to-many relationship**, add a foreign key in the **"many"** side table, referencing the primary key of the **"one"** side table. This foreign key ensures each record in the many-side table links to only one record in the one-side table.
+
+#### Example
+A `Teacher` can teach multiple `Students`, so we add `TeacherID` as a foreign key in the `Student` table.
+
+```sql
+CREATE TABLE Teacher (
+    TeacherID INT PRIMARY KEY,
+    Name VARCHAR(50)
+);
+
+CREATE TABLE Student (
+    StudentID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    TeacherID INT,
+    FOREIGN KEY (TeacherID) REFERENCES Teacher(TeacherID)
+);
+```
+
+---
+
+### 3. Many-to-Many (M:N) Relationships
+
+For a **many-to-many relationship**, create a **junction table** to link the two entities. This junction table includes foreign keys referencing the primary keys of the related tables and typically has a **composite primary key** formed by these foreign keys.
+
+#### Example
+A `Student` can enroll in multiple `Courses`, and each `Course` can have multiple students. We create an `Enrollment` table to manage this relationship.
+
+```sql
+CREATE TABLE Student (
+    StudentID INT PRIMARY KEY,
+    Name VARCHAR(50)
+);
+
+CREATE TABLE Course (
+    CourseID INT PRIMARY KEY,
+    CourseName VARCHAR(50)
+);
+
+CREATE TABLE Enrollment (
+    StudentID INT,
+    CourseID INT,
+    EnrollmentDate DATE,
+    PRIMARY KEY (StudentID, CourseID),
+    FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Course(CourseID)
+);
+```
+
+---
+
+## Summary Table
+
+| Relationship Type | Transformation in Tables                               | Example |
+|-------------------|--------------------------------------------------------|---------|
+| **One-to-One**    | Add a foreign key in one of the tables                 | `Employee` and `ParkingSpot` tables |
+| **One-to-Many**   | Add a foreign key in the "many" side table             | `Teacher` and `Student` tables      |
+| **Many-to-Many**  | Create a junction table with foreign keys from both tables | `Student`, `Course`, and `Enrollment` tables |
+
+---
+
+## Conclusion
+
+Transforming an E-R diagram into tables requires understanding each relationship's cardinality. **One-to-one** and **one-to-many** relationships can be represented by foreign keys, while **many-to-many** relationships require a separate junction table, ensuring that all associations are represented accurately in the relational schema.
+
+---
+
+Here’s a guide on **SQL Commands for Table Operations**, including **table creation**, **record insertion**, **data retrieval with conditions**, and other relevant SQL queries, formatted for a GitHub Markdown file.
+
+---
+
+# SQL Commands for Table Operations
+
+SQL (Structured Query Language) allows us to create, manage, and manipulate databases efficiently. Below are the basic SQL commands for **table creation**, **record insertion**, **data retrieval**, and other essential operations.
+
+---
+
+## 1. Basic SQL Query Format
+
+SQL queries follow a general format of specifying an operation (`SELECT`, `INSERT`, etc.) followed by clauses that detail the specific actions.
+
+### Example Format
+```sql
+OPERATION [column_names] FROM table_name WHERE condition;
+```
+
+For example, a basic **data retrieval** query could look like:
+```sql
+SELECT * FROM Customers WHERE Country = 'USA';
+```
+
+---
+
+## 2. Table Creation
+
+The `CREATE TABLE` statement is used to define a new table in a database, specifying column names and data types.
+
+### Example
+```sql
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Email VARCHAR(50),
+    Country VARCHAR(30)
+);
+```
+
+This command creates a `Customers` table with four columns: `CustomerID`, `Name`, `Email`, and `Country`.
+
+---
+
+## 3. Record Insertion
+
+The `INSERT INTO` statement is used to add new rows to a table. You can insert data into specific columns or all columns at once.
+
+### Example: Inserting into All Columns
+```sql
+INSERT INTO Customers (CustomerID, Name, Email, Country)
+VALUES (1, 'John Doe', 'johndoe@example.com', 'USA');
+```
+
+### Example: Inserting into Specific Columns
+```sql
+INSERT INTO Customers (CustomerID, Name)
+VALUES (2, 'Jane Smith');
+```
+
+This example inserts a record with only `CustomerID` and `Name` specified; `Email` and `Country` will be set to `NULL` if allowed.
+
+---
+
+## 4. Data Retrieval with Conditions
+
+The `SELECT` statement retrieves data from a table. Using the `WHERE` clause, you can filter data based on specific conditions.
+
+### Example: Simple Retrieval
+```sql
+SELECT * FROM Customers;
+```
+
+### Example: Retrieval with Condition
+```sql
+SELECT Name, Email FROM Customers WHERE Country = 'USA';
+```
+
+### Example: Multiple Conditions (AND, OR)
+```sql
+SELECT * FROM Customers WHERE Country = 'USA' AND Email IS NOT NULL;
+```
+
+---
+
+## 5. Updating Records
+
+The `UPDATE` statement modifies existing records in a table. Use the `WHERE` clause to specify which records to update.
+
+### Example
+```sql
+UPDATE Customers
+SET Email = 'newemail@example.com'
+WHERE CustomerID = 1;
+```
+
+This command updates the email of the customer with `CustomerID` 1.
+
+---
+
+## 6. Deleting Records
+
+The `DELETE` statement removes records from a table. Use the `WHERE` clause to specify which records to delete; if omitted, all records will be deleted.
+
+### Example
+```sql
+DELETE FROM Customers WHERE CustomerID = 2;
+```
+
+This deletes the customer with `CustomerID` 2.
+
+---
+
+## 7. Advanced Data Retrieval
+
+SQL provides several ways to retrieve and manipulate data based on specific requirements.
+
+### Sorting Results with `ORDER BY`
+```sql
+SELECT * FROM Customers ORDER BY Name ASC;
+```
+
+### Limiting Results with `LIMIT`
+```sql
+SELECT * FROM Customers LIMIT 5;
+```
+
+### Aggregating Data with Functions
+```sql
+SELECT Country, COUNT(*) AS NumCustomers FROM Customers GROUP BY Country;
+```
+
+### Using `JOIN` to Retrieve Data from Multiple Tables
+Assuming we have another table `Orders` with `CustomerID` as a foreign key:
+```sql
+SELECT Customers.Name, Orders.OrderID
+FROM Customers
+JOIN Orders ON Customers.CustomerID = Orders.CustomerID;
+```
+
+---
+
+## Summary Table
+
+| Command             | Purpose                      | Example |
+|---------------------|------------------------------|---------|
+| **CREATE TABLE**    | Creates a new table          | `CREATE TABLE Customers (...)` |
+| **INSERT INTO**     | Inserts new records          | `INSERT INTO Customers (...) VALUES (...)` |
+| **SELECT**          | Retrieves data from table    | `SELECT * FROM Customers WHERE Country = 'USA'` |
+| **UPDATE**          | Modifies existing records    | `UPDATE Customers SET Email = '...' WHERE ...` |
+| **DELETE**          | Removes records from table   | `DELETE FROM Customers WHERE ...` |
+| **ORDER BY**        | Sorts query results          | `SELECT * FROM Customers ORDER BY Name` |
+| **GROUP BY**        | Groups data for aggregation  | `SELECT Country, COUNT(*) FROM Customers GROUP BY Country` |
+| **JOIN**            | Combines data from tables    | `SELECT ... FROM Customers JOIN Orders ON ...` |
+
+---
+
+## Conclusion
+
+These SQL commands form the core of database management and operations, allowing you to create, manipulate, and retrieve data efficiently. Understanding these basics is crucial for effectively using relational databases.
+
+---
+
+Here’s a description of an **E-R Diagram** for an **Online Bookstore** system, covering the **entities** (Books, Customers, Orders) and **relationships** (Buys, Contains), formatted for a GitHub Markdown file.
+
+---
+
+# E-R Diagram for Online Bookstore
+
+This E-R diagram models an **Online Bookstore** system that includes **Books**, **Customers**, and **Orders** as key entities. Relationships include **Buys** (between Customers and Orders) and **Contains** (between Orders and Books).
+
+---
+
+## Entities and Attributes
+
+1. **Books**
+   - **Attributes**: `BookID` (Primary Key), `ISBN`, `Title`, `Genre`, `Price`, `PublicationYear`
+   - **Description**: Represents individual books available in the bookstore, each with a unique `BookID`, an `ISBN`, and other details like `Title` and `Genre`.
+
+2. **Customers**
+   - **Attributes**: `CustomerID` (Primary Key), `Name`, `Email`, `ShippingAddress`
+   - **Description**: Represents registered customers with a unique `CustomerID`. Other attributes like `Name` and `Email` store customer information.
+
+3. **Orders**
+   - **Attributes**: `OrderID` (Primary Key), `OrderDate`, `TotalPrice`, `Status`
+   - **Description**: Represents individual orders placed by customers. Each order is uniquely identified by `OrderID` and has associated details like `OrderDate` and `TotalPrice`.
+
+---
+
+## Relationships
+
+1. **Buys (1:N Relationship)** 
+   - **Description**: A **Customer** can place multiple **Orders**, but each order is associated with only one customer.
+   - **Cardinality**: One-to-Many (1:N)
+   - **Representation**: `CustomerID` is added as a foreign key in the `Orders` table, linking each order to a specific customer.
+
+2. **Contains (M:N Relationship)**
+   - **Description**: An **Order** can contain multiple **Books**, and each book can be part of multiple orders.
+   - **Cardinality**: Many-to-Many (M:N)
+   - **Representation**: A **junction table** called `OrderDetails` (or similar) is created to handle this relationship, with `OrderID` and `BookID` as foreign keys, and any additional attributes like `Quantity` for the number of each book ordered.
+
+---
+
+## E-R Diagram Structure
 
 
+![ER-Diagram](image-4.png)
+
+![Er-diagram](image-5.png)
+
+![er-diagram](image-6.png)
+In an E-R diagram:
+
+- **Entities**: Drawn as rectangles with attributes inside or connected to the entity.
+- **Relationships**: Represented as diamonds with the relationship name connecting two entities.
+
+### Diagram Structure:
+- **Books** ⟶ `OrderDetails` (junction table) ⟵ **Orders**
+- **Customers** ⟶ **Orders** 
+
+---
+
+## E-R Diagram in SQL Table Structure
+
+Based on the E-R structure above, the SQL table representation would look like:
+
+```sql
+CREATE TABLE Books (
+    BookID INT PRIMARY KEY,
+    ISBN VARCHAR(13),
+    Title VARCHAR(100),
+    Genre VARCHAR(50),
+    Price DECIMAL(5, 2),
+    PublicationYear INT
+);
+
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Email VARCHAR(50),
+    ShippingAddress VARCHAR(100)
+);
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    OrderDate DATE,
+    TotalPrice DECIMAL(8, 2),
+    Status VARCHAR(20),
+    CustomerID INT,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+CREATE TABLE OrderDetails (
+    OrderID INT,
+    BookID INT,
+    Quantity INT,
+    PRIMARY KEY (OrderID, BookID),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (BookID) REFERENCES Books(BookID)
+);
+```
+
+---
+
+## Summary Table of Entities and Relationships
+
+| Entity      | Attributes                                              | Relationship                   |
+|-------------|---------------------------------------------------------|--------------------------------|
+| **Books**   | `BookID`, `ISBN`, `Title`, `Genre`, `Price`, `PublicationYear` | **Contains** (with Orders)    |
+| **Customers** | `CustomerID`, `Name`, `Email`, `ShippingAddress`      | **Buys** (Orders)             |
+| **Orders**  | `OrderID`, `OrderDate`, `TotalPrice`, `Status`          | **Contains** (with Books)     |
+
+---
+
+## Conclusion
+
+This E-R diagram for an online bookstore provides a structure to manage books, customers, and orders efficiently. The **Buys** and **Contains** relationships help capture the interactions between customers, orders, and books, facilitating a comprehensive model for online sales.
+
+---
 
 # [Basics of Functional Dependencies and Normalization for Relational Databases](https://www.tutorialspoint.com/basics-of-functional-dependencies-and-normalization-for-relational-databases)
 
