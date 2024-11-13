@@ -2,6 +2,45 @@
 
 <span style="font-size:20px;">
 
+# Characteristics of Memory Systems
+
+The term location in Table 4.1 refers to whether memory is internal and external
+to the computer. Internal memory is often equated with main memory. But there
+are other forms of internal memory. The processor requires its own local memory, in
+the form of registers (e.g., see Figure 2.3). Further, as we shall see, the control unit
+portion of the processor may also require its own internal memory. We will defer
+discussion of these latter two types of internal memory to later chapters. Cache is
+another form of internal memory. External memory consists of peripheral storage
+devices, such as disk and tape, that are accessible to the processor via I/O controllers.
+
+An obvious characteristic of memory is its capacity. For internal memory, this is
+typically expressed in terms of bytes (1 byte = 8 bits) or words. Common word lengths
+are 8, 16, and 32 bits. External memory capacity is typically expressed in terms of bytes.
+
+A related concept is the unit of transfer. For internal memory, the unit
+of transfer is equal to the number of electrical lines into and out of the memory
+module. This may be equal to the word length, but is often larger, such as 64, 128, or
+256 bits. To clarify this point, consider three related concepts for internal memory:
+
+• Word: The “natural” unit of organization of memory. The size of a word is typically
+equal to the number of bits used to represent an integer and to the instruction
+length. Unfortunately, there are many exceptions. For example, the CRAY
+C90 (an older model CRAY supercomputer) has a 64-bit word length but uses
+a 46-bit integer representation. The Intel x86 architecture has a wide variety of
+instruction lengths, expressed as multiples of bytes, and a word size of 32 bits.
+
+• Addressable units: In some systems, the addressable unit is the word. However,
+many systems allow addressing at the byte level. In any case, the relationship
+between the length in bits A of an address and the number N of addressable
+units is 2A = N.
+
+• Unit of transfer: For main memory, this is the number of bits read out of or
+written into memory at a time. The unit of transfer need not equal a word or
+an addressable unit. For external memory, data are often transferred in much
+larger units than a word, and these are referred to as blocks
+
+--- 
+
 
 # Read Only Memory-ROM 
 
