@@ -1,7 +1,214 @@
 # Beyond Slides
 
-<span style="font-size:20px;">
+<span style="font-size:24px;">
 
+---
+
+# A Top-Level View of Computer Function and Interconnection: 
+
+## Basic instruction cycle: 
+
+ The basic function performed by a computer is execution of a program, which consists
+of a set of instructions stored in memory. The processor does the actual work by
+executing instructions specified in the program. This section provides an overview of
+the key elements of program execution. In its simplest form, instruction processing
+consists of two steps: The processor reads (fetches ) instructions from memory one
+at a time and executes each instruction. Program execution consists of repeating
+the process of instruction fetch and instruction execution. The instruction execution
+may involve several operations and depends on the nature of the instruction (see, for
+example, the lower portion of Figure 2.4).
+
+The processing required for a single instruction is called an instruction cycle.
+Using the simplified two-step description given previously, the instruction cycle is
+depicted in Figure 3.3. The two steps are referred to as the fetch cycle and the execute
+cycle. Program execution halts only if the machine is turned off, some sort of unrecoverable
+error occurs, or a program instruction that halts the computer is encountered.
+
+## Fetch Cycle: 
+
+At the beginning of each instruction cycle, the processor fetches an instruction
+from memory. In a typical processor, a register called the program counter (PC)
+holds the address of the instruction to be fetched next. Unless told otherwise, the
+processor always increments the PC after each instruction fetch so that it will fetch
+the next instruction in sequence (i.e., the instruction located at the next higher memory
+address). So, for example, consider a computer in which each instruction occupies
+one 16-bit word of memory. Assume that the program counter is set to memory
+location 300, where the location address refers to a 16-bit word. The processor will
+next fetch the instruction at location 300. On succeeding instruction cycles, it will
+fetch instructions from locations 301, 302, 303, and so on. This sequence may be
+altered, as explained presently.
+
+The fetched instruction is loaded into a register in the processor known as
+the instruction register (IR). The instruction contains bits that specify the action
+the processor is to take. The processor interprets the instruction and performs the
+required action. 
+
+
+## Example of a partial program execution:
+
+Figure 3.5 illustrates a partial program execution, showing the relevant
+portions of memory and processor registers. The program fragment shown adds
+the contents of the memory word at address 940 to the contents of the memory
+word at address 941 and stores the result in the latter location. Three instructions,
+which can be described as three fetch and three execute cycles, are required:
+
+1. The PC contains 300, the address of the first instruction. This instruction (the
+value 1940 in hexadecimal) is loaded into the instruction register IR, and
+the PC is incremented. Note that this process involves the use of a memory
+address register and a memory buffer register. For simplicity, these intermediate
+registers are ignored.
+
+2. The first 4 bits (first hexadecimal digit) in the IR indicate that the AC is to be
+loaded. The remaining 12 bits (three hexadecimal digits) specify the address
+(940) from which data are to be loaded.
+
+3. The next instruction (5941) is fetched from location 301, and the PC is
+incremented.
+
+4. The old contents of the AC and the contents of location 941 are added, and
+the result is stored in the AC.
+
+5. The next instruction (2941) is fetched from location 302, and the PC is
+incremented.
+
+6. The contents of the AC are stored in location 941.
+
+In this example, three instruction cycles, each consisting of a fetch cycle and an
+execute cycle, are needed to add the contents of location 940 to the contents of 941.
+With a more complex set of instructions, fewer cycles would be needed. Some older
+processors, for example, included instructions that contain more than one memory
+address. Thus, the execution cycle for a particular instruction on such processors could
+involve more than one reference to memory. Also, instead of memory references, an
+instruction may specify an I/O operation.
+
+## Instruction Cycle State Diagram: 
+
+The execution cycle for a particular instruction may involve more than one
+reference to memory. Also, instead of memory references, an instruction may specify
+an I/O operation. With these additional considerations in mind, Figure 3.6 provides
+a more detailed look at the basic instruction cycle of Figure 3.3. The figure is in the
+form of a state diagram.
+
+For any given instruction cycle, some states may be null and
+others may be visited more than once. The states can be described as follows:
+
+### Instruction address calculation (iac): 
+Determine the address of the next
+instruction to be executed. Usually, this involves adding a fixed number to
+the address of the previous instruction. For example, if each instruction is 16
+bits long and memory is organized into 16-bit words, then add 1 to the previous
+address. If, instead, memory is organized as individually addressable 8-bit
+bytes, then add 2 to the previous address.
+
+ ### • Instruction fetch (if): 
+ Read instruction from its memory location into the
+processor.
+
+### • Instruction operation decoding (iod): 
+Analyze instruction to determine type
+of operation to be performed and operand(s) to be used.
+
+### • Operand address calculation (oac): 
+If the operation involves reference to an
+operand in memory or available via I/O, then determine the address of the
+operand.
+
+### • Operand fetch (of): 
+Fetch the operand from memory or read it in from I/O.
+
+### • Data operation (do): 
+Perform the operation indicated in the instruction.
+
+### • Operand store (os): 
+Write the result into memory or out to I/O.
+
+States in the upper part of Figure 3.6 involve an exchange between the
+processor and either memory or an I/O module. States in the lower part of the
+diagram involve only internal processor operations. The oac state appears twice,
+because an instruction may involve a read, a write, or both. However, the action performed
+during that state is fundamentally the same in both cases, and so only a single
+state identifier is needed.
+
+Also note that the diagram allows for multiple operands and multiple results,
+because some instructions on some machines require this. For example, the PDP-11
+instruction ADD A,B results in the following sequence of states: iac, if, iod, oac, of,
+oac, of, do, oac, os.
+
+Finally, on some machines, a single instruction can specify an operation to be performed
+on a vector (one-dimensional array) of numbers or a string (one-dimensional
+array) of characters. As Figure 3.6 indicates, this would involve repetitive operand fetch
+and/or store operations.
+
+
+## Instruction Cycle without Interrupts: 
+
+To accommodate interrupts, an interrupt cycle is added to the instruction
+cycle, as shown in Figure 3.9. In the interrupt cycle, the processor checks to see if
+any interrupts have occurred, indicated by the presence of an interrupt signal. If no
+interrupts are pending, the processor proceeds to the fetch cycle and fetches the
+next instruction of the current program. If an interrupt is pending, the processor
+does the following:
+
+• It suspends execution of the current program being executed and saves its
+context. This means saving the address of the next instruction to be executed
+(current contents of the program counter) and any other data relevant to the
+processor’s current activity.
+
+• It sets the program counter to the starting address of an interrupt handler routine.
+
+The processor now proceeds to the fetch cycle and fetches the first instruction
+in the interrupt handler program, which will service the interrupt. The interrupt
+handler program is generally part of the operating system. Typically, this program
+determines the nature of the interrupt and performs whatever actions are needed.
+In the example we have been using, the handler determines which I/O module
+generated the interrupt and may branch to a program that will write more data out
+to that I/O module. When the interrupt handler routine is completed, the processor
+can resume execution of the user program at the point of interruption.
+
+It is clear that there is some overhead involved in this process. Extra instructions
+must be executed (in the interrupt handler) to determine the nature of the interrupt
+and to decide on the appropriate action. Nevertheless, because of the relatively large
+amount of time that would be wasted by simply waiting on an I/O operation, the
+processor can be employed much more efficiently with the use of interrupts.
+
+## Computer Modules: 
+
+A computer consists of a set of components or modules of three basic types
+(processor, memory, I/O) that communicate with each other. In effect, a computer is
+a network of basic modules. Thus, there must be paths for connecting the modules.
+
+The collection of paths connecting the various modules is called the interconnection
+structure. The design of this structure will depend on the exchanges that
+must be made among modules.
+
+Figure 3.15 suggests the types of exchanges that are needed by indicating the
+major forms of input and output for each module type:
+
+### • Memory: 
+Typically, a memory module will consist of N words of equal length.
+Each word is assigned a unique numerical address (0, 1, …, N - 1). A word of
+data can be read from or written into the memory. The nature of the operation
+is indicated by read and write control signals. The location for the operation is
+specified by an address.
+
+### • I/O module: 
+From an internal (to the computer system) point of view, I/O
+is functionally similar to memory. There are two operations, read and write.
+Further, an I/O module may control more than one external device. We can
+refer to each of the interfaces to an external device as a port and give each
+a unique address (e.g., 0, 1, …, M - 1). In addition, there are external data
+paths for the input and output of data with an external device. Finally, an I/O
+module may be able to send interrupt signals to the processor.
+
+### • Processor: 
+The processor reads in instructions and data, writes out data after
+processing, and uses control signals to control the overall operation of the
+system. It also receives interrupt signals.
+
+
+
+
+--- 
 # Characteristics of Memory Systems
 
 The term location in Table 4.1 refers to whether memory is internal and external
@@ -22,25 +229,137 @@ of transfer is equal to the number of electrical lines into and out of the memor
 module. This may be equal to the word length, but is often larger, such as 64, 128, or
 256 bits. To clarify this point, consider three related concepts for internal memory:
 
-• Word: The “natural” unit of organization of memory. The size of a word is typically
+### Word: 
+The “natural” unit of organization of memory. The size of a word is typically
 equal to the number of bits used to represent an integer and to the instruction
 length. Unfortunately, there are many exceptions. For example, the CRAY
 C90 (an older model CRAY supercomputer) has a 64-bit word length but uses
 a 46-bit integer representation. The Intel x86 architecture has a wide variety of
 instruction lengths, expressed as multiples of bytes, and a word size of 32 bits.
 
-• Addressable units: In some systems, the addressable unit is the word. However,
+### Addressable units:
+In some systems, the addressable unit is the word. However,
 many systems allow addressing at the byte level. In any case, the relationship
 between the length in bits A of an address and the number N of addressable
 units is 2A = N.
 
-• Unit of transfer: For main memory, this is the number of bits read out of or
+### Unit of transfer: 
+For main memory, this is the number of bits read out of or
 written into memory at a time. The unit of transfer need not equal a word or
 an addressable unit. For external memory, data are often transferred in much
 larger units than a word, and these are referred to as blocks
 
 --- 
 
+# Method of Accessing Units of Data
+
+Another distinction among memory types is the method of accessing units of
+data. These include the following:
+
+### Sequential access:  
+Memory is organized into units of data, called records.
+Access must be made in a specific linear sequence. Stored addressing information
+is used to separate records and assist in the retrieval process. A shared
+read–write mechanism is used, and this must be moved from its current location
+to the desired location, passing and rejecting each intermediate record.
+Thus, the time to access an arbitrary record is highly variable. Tape units, discussed
+in Chapter 6, are sequential access.
+
+### Direct access: 
+As with sequential access, direct access involves a shared
+read–write mechanism. However, individual blocks or records have a unique
+address based on physical location. Access is accomplished by direct access
+to reach a general vicinity plus sequential searching, counting, or waiting to
+reach the final location. Again, access time is variable. Disk units, discussed in
+Chapter 6, are direct access.
+
+### Random access: 
+Each addressable location in memory has a unique, physically
+wired-in addressing mechanism. The time to access a given location is independent
+of the sequence of prior accesses and is constant. Thus, any location
+can be selected at random and directly addressed and accessed. Main memory
+and some cache systems are random access.
+
+### Associative: 
+This is a random access type of memory that enables one to make
+a comparison of desired bit locations within a word for a specified match, and
+to do this for all words simultaneously. Thus, a word is retrieved based on a
+portion of its contents rather than its address. As with ordinary random-access
+memory, each location has its own addressing mechanism, and retrieval time
+is constant independent of location or prior access patterns. Cache memories
+may employ associative access.
+
+# Memory Hierarchy: 
+
+The design constraints on a computer’s memory can be summed up by three questions:
+How much? How fast? How expensive?
+
+The question of how much is somewhat open ended. If the capacity is there,
+applications will likely be developed to use it. The question of how fast is, in a sense,
+easier to answer. To achieve greatest performance, the memory must be able to
+keep up with the processor. That is, as the processor is executing instructions, we
+would not want it to have to pause waiting for instructions or operands. The final
+question must also be considered. For a practical system, the cost of memory must
+be reasonable in relationship to other components.
+
+As might be expected, there is a trade-off among the three key characteristics
+of memory: capacity, access time, and cost. A variety of technologies are used to
+implement memory systems, and across this spectrum of technologies, the following
+relationships hold:
+
+• Faster access time, greater cost per bit
+
+• Greater capacity, smaller cost per bit
+
+• Greater capacity, slower access time
+
+The dilemma facing the designer is clear. The designer would like to use memory
+technologies that provide for large-capacity memory, both because the capacity
+is needed and because the cost per bit is low. However, to meet performance
+requirements, the designer needs to use expensive, relatively lower-capacity memories
+with short access times.
+The way out of this dilemma is not to rely on a single memory component or
+technology, but to employ a memory hierarchy.
+
+-- 
+
+A typical hierarchy is illustrated in
+Figure 4.1. As one goes down the hierarchy, the following occur:
+
+a. Decreasing cost per bit
+
+b. Increasing capacity
+
+c. Increasing access time
+
+d. Decreasing frequency of access of the memory by the processor
+
+Thus, smaller, more expensive, faster memories are supplemented by larger,
+cheaper, slower memories. The key to the success of this organization is item (d)
+:decreasing frequency of access. We examine this concept in greater detail when we
+discuss the cache, later in this chapter, and virtual memory in Chapter 8. A brief
+explanation is provided at this point.
+
+The use of two levels of memory to reduce average access time works in principle,
+but only if conditions (a) through (d) apply. By employing a variety of technologies,
+a spectrum of memory systems exists that satisfies conditions (a) through
+(c). Fortunately, condition (d) is also generally valid.
+
+The basis for the validity of condition (d) is a principle known as locality of
+reference [DENN68]. During the course of execution of a program, memory references
+by the processor, for both instructions and data, tend to cluster. Programs
+typically contain a number of iterative loops and subroutines. Once a loop or subroutine
+is entered, there are repeated references to a small set of instructions.
+Similarly, operations on tables and arrays involve access to a clustered set of data
+words. Over a long period of time, the clusters in use change, but over a short period
+of time, the processor is primarily working with fixed clusters of memory references.
+
+
+
+
+
+
+---
 
 # Read Only Memory-ROM 
 
@@ -69,6 +388,54 @@ thousands of copies of a particular ROM are fabricated.
 • There is no room for error. If one bit is wrong, the whole batch of ROMs must
 be thrown out.
 
+
+# The Performance of a Simple 2 level Memory: 
+
+Suppose that the processor has access to two levels of memory. Level
+1 contains 1000 words and has an access time of 0.01 μs; level 2 contains 100,000 words
+and has an access time of0.1 μs. Assume that if a word to be accessed is in level 1, then the
+processor accesses it directly. If it is in level 2, then the word is first transferred to level 1
+and then accessed by the processor. For simplicity, we ignore the time required for the processor
+to determine whether the word is in level 1 or level 2. Figure 4.2 shows the general
+shape of the curve that covers this situation. The figure shows the average access time to
+a two-level memory as a function of the hit ratio H, where H is defined as the fraction of
+all memory accesses that are found in the faster memory (e.g., the cache), T1 is the access
+time to level 1, and T2 is the access time to level 2. As can be seen, for high percentages
+of level 1 access, the average total access time is much closer to that of level 1 than that
+of level 2.
+
+In our example, suppose 95% of the memory accesses are found in level 1. Then the
+average time to access a word can be expressed as
+
+(0.95)(0.01 μs) + (0.05)(0.01 μs + 0.1 μs) = 0.0095 + 0.0055 = 0.015 μs
+
+The average access time is much closer to 0.01 μs than to 0.1 μs, as desired.
+
+Accordingly, it is possible to organize data across the hierarchy such that the
+percentage of accesses to each successively lower level is substantially less than that
+of the level above. Consider the two-level example already presented. Let level 2
+memory contains all program instructions and data. The current clusters can be
+temporarily placed in level 1. From time to time, one of the clusters in level 1 will
+have to be swapped back to level 2 to make room for a new cluster coming in to
+level 1. On average, however, most references will be to instructions and data contained
+in level 1.
+
+This principle can be applied across more than two levels of memory, as suggested
+by the hierarchy shown in Figure 4.1. The fastest, smallest, and most expensive
+type of memory consists of the registers internal to the processor. Typically, a
+processor will contain a few dozen such registers, although some machines contain
+hundreds of registers. Main memory is the principal internal memory system of
+the computer. Each location in main memory has a unique address. Main memory
+is usually extended with a higher-speed, smaller cache. The cache is not usually
+visible to the programmer or, indeed, to the processor. It is a device for staging
+the movement of data between main memory and processor registers to improve
+performance.
+
+
+
+
+
+
 --- 
 
 # Flash Memory 
@@ -79,11 +446,11 @@ required to maintain the bit values in memory. While it is possible to read a RO
 it is not possible to write new data into it. An important application of ROMs is
 microprogramming, discussed in Part Four. Other potential applications include
 
-• Library subroutines for frequently wanted functions
+### 1. Library subroutines for frequently wanted functions
 
-• System programs
+### 2. System programs
 
-• Function tables
+### 3. Function tables
 
 For a modest-sized requirement, the advantage of ROM is that the data or program
 is permanently in main memory and need never be loaded from a secondary storage
@@ -97,6 +464,64 @@ thousands of copies of a particular ROM are fabricated.
 
 • There is no room for error. If one bit is wrong, the whole batch of ROMs must
 be thrown out.
+
+# Cache Memory & Main Memory: 
+
+Cache memory is designed to combine the memory access time of expensive, high-speed
+memory combined with the large memory size of less expensive, lower-speed
+memory.
+
+The concept is illustrated in Figure 4.3a. There is a relatively large and slow
+main memory together with a smaller, faster cache memory. The cache contains a
+copy of portions of main memory. When the processor attempts to read a word of
+memory, a check is made to determine if the word is in the cache. If so, the word is
+delivered to the processor. If not, a block of main memory, consisting of some fixed
+number of words, is read into the cache and then the word is delivered to the processor.
+Because of the phenomenon of locality of reference, when a block of data is
+fetched into the cache to satisfy a single memory reference, it is likely that there will
+be future references to that same memory location or to other words in the block.
+
+Figure 4.3b depicts the use of multiple levels of cache. The L2 cache is slower
+and typically larger than the L1 cache, and the L3 cache is slower and typically
+larger than the L2 cache.
+
+
+# Typical Cache Organization: 
+
+In this organization, the cache
+connects to the processor via data, control, and address lines. The data and address
+lines also attach to data and address buffers, which attach to a system bus from
+which main memory is reached. When a cache hit occurs, the data and address buffers
+are disabled and communication is only between processor and cache, with no
+system bus traffic. When a cache miss occurs, the desired address is loaded onto the
+system bus and the data are returned through the data buffer to both the cache and
+the processor. In other organizations, the cache is physically interposed between
+the processor and the main memory for all data, address, and control lines. In this
+latter case, for a cache miss, the desired word is first read into the cache and then
+transferred from cache to processor.
+
+ A discussion of the performance parameters related to cache use is contained
+in Appendix 4A.
+
+# Logical & Physical Cache: 
+
+When virtual addresses are used, the system designer may choose to place the
+cache between the processor and the MMU or between the MMU and main memory
+(Figure 4.7). A logical cache, also known as a virtual cache, stores data using
+virtual addresses. The processor accesses the cache directly, without going through
+the MMU. A physical cache stores data using main memory physical addresses.
+
+One obvious advantage of the logical cache is that cache access speed is faster
+than for a physical cache, because the cache can respond before the MMU performs
+an address translation. The disadvantage has to do with the fact that most virtual
+memory systems supply each application with the same virtual memory address
+space. That is, each application sees a virtual memory that starts at address 0. Thus,
+the same virtual address in two different applications refers to two different physical
+addresses. The cache memory must therefore be completely flushed with each
+application context switch, or extra bits must be added to each line of the cache to
+identify which virtual address space this address refers to.
+
+
 
 --- 
 
