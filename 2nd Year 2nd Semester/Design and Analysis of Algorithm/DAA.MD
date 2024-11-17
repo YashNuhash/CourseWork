@@ -437,6 +437,92 @@ To solve \( 9^{19} \mod 7 \) using Divide and Conquer:
 1. **Base Modulus**: \( 9 \mod 7 = 2 \)
 2. Calculate \( 2^{19} \mod 7 \) using **Exponentiation by Squaring**.
 
+To compute \( 9^{19} \mod 7 \) efficiently using the **divide and conquer** method, we use **modular exponentiation** with the following steps:
+
+---
+
+### **Key Idea**
+Using the property of modular arithmetic:
+\[
+(a \cdot b) \mod n = [(a \mod n) \cdot (b \mod n)] \mod n
+\]
+we can reduce the base and repeatedly divide the power. The divide-and-conquer approach splits the problem into smaller powers and combines the results.
+
+---
+
+### **Step-by-Step Solution**
+
+1. **Simplify the base under modulo:**
+   Since \( 9 \mod 7 = 2 \), we simplify:
+   \[
+   9^{19} \mod 7 \equiv 2^{19} \mod 7
+   \]
+
+2. **Break the exponent using divide and conquer:**
+   To compute \( 2^{19} \mod 7 \), we recursively split the power:
+   - If the exponent is even:
+     \[
+     a^b = (a^{b/2})^2
+     \]
+   - If the exponent is odd:
+     \[
+     a^b = a \cdot a^{b-1}
+     \]
+
+3. **Recursive Computation:**
+   Start with \( 2^{19} \mod 7 \):
+
+   #### Step 1: Compute \( 2^{19} \mod 7 \)
+   - \( 19 \) is odd, so:
+     \[
+     2^{19} \mod 7 = (2 \cdot 2^{18}) \mod 7
+     \]
+
+   #### Step 2: Compute \( 2^{18} \mod 7 \)
+   - \( 18 \) is even, so:
+     \[
+     2^{18} \mod 7 = (2^9)^2 \mod 7
+     \]
+
+   #### Step 3: Compute \( 2^9 \mod 7 \)
+   - \( 9 \) is odd, so:
+     \[
+     2^9 \mod 7 = (2 \cdot 2^8) \mod 7
+     \]
+
+   #### Step 4: Compute \( 2^8 \mod 7 \)
+   - \( 8 \) is even, so:
+     \[
+     2^8 \mod 7 = (2^4)^2 \mod 7
+     \]
+
+   #### Step 5: Compute \( 2^4 \mod 7 \)
+   - \( 4 \) is even, so:
+     \[
+     2^4 \mod 7 = (2^2)^2 \mod 7
+     \]
+
+   #### Step 6: Compute \( 2^2 \mod 7 \)
+   - \( 2^2 = 4 \), so:
+     \[
+     2^2 \mod 7 = 4
+     \]
+
+4. **Combine results from bottom-up:**
+
+   - \( 2^4 \mod 7 = (4 \cdot 4) \mod 7 = 16 \mod 7 = 2 \)
+   - \( 2^8 \mod 7 = (2 \cdot 2) \mod 7 = 4 \)
+   - \( 2^9 \mod 7 = (2 \cdot 4) \mod 7 = 8 \mod 7 = 1 \)
+   - \( 2^{18} \mod 7 = (1 \cdot 1) \mod 7 = 1 \)
+   - \( 2^{19} \mod 7 = (2 \cdot 1) \mod 7 = 2 \)
+
+---
+
+### **Final Answer:**
+\[
+9^{19} \mod 7 = 2
+\]
+
 ---
 
 ## 3. (a) Define Loop and Cycle of a graph. What do you mean by C5 and K5 of a graph? Draw the corresponding graph.
@@ -1255,5 +1341,283 @@ LIS Length Calculation:
 
 --- 
  
+### Sorting Example:  
+We will sort the array **`[5, 3, 8, 6, 2, 7, 4, 1]`** using the following algorithms: **Insertion Sort, Merge Sort, Heap Sort, and Quick Sort.**
+
+---
+
+### **1. Insertion Sort**
+Insertion Sort works by picking elements one by one and inserting them into their correct position in the sorted part of the array.
+
+#### **Pseudocode:**
+```plaintext
+InsertionSort(arr):
+    for i = 1 to arr.length - 1:
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j = j - 1
+        arr[j + 1] = key
+```
+
+#### **Step-by-Step Execution**:
+Initial Array: **[5, 3, 8, 6, 2, 7, 4, 1]**
+
+1. Pass 1: Insert `3` → **[3, 5, 8, 6, 2, 7, 4, 1]**
+2. Pass 2: Insert `8` → **[3, 5, 8, 6, 2, 7, 4, 1]**
+3. Pass 3: Insert `6` → **[3, 5, 6, 8, 2, 7, 4, 1]**
+4. Pass 4: Insert `2` → **[2, 3, 5, 6, 8, 7, 4, 1]**
+5. Pass 5: Insert `7` → **[2, 3, 5, 6, 7, 8, 4, 1]**
+6. Pass 6: Insert `4` → **[2, 3, 4, 5, 6, 7, 8, 1]**
+7. Pass 7: Insert `1` → **[1, 2, 3, 4, 5, 6, 7, 8]**
+
+---
+
+### **2. Merge Sort**
+Merge Sort works by dividing the array into halves, sorting each half, and merging them back together.
+
+#### **Pseudocode:**
+```plaintext
+MergeSort(arr, left, right):
+    if left < right:
+        mid = (left + right) / 2
+        MergeSort(arr, left, mid)
+        MergeSort(arr, mid + 1, right)
+        Merge(arr, left, mid, right)
+
+Merge(arr, left, mid, right):
+    Create two temporary arrays L and R from arr[left..mid] and arr[mid+1..right]
+    i, j, k = 0, 0, left
+    while i < L.length and j < R.length:
+        if L[i] <= R[j]:
+            arr[k] = L[i]
+            i++
+        else:
+            arr[k] = R[j]
+            j++
+        k++
+    Copy remaining elements of L and R (if any) back to arr
+```
+
+#### **Step-by-Step Execution**:
+Initial Array: **[5, 3, 8, 6, 2, 7, 4, 1]**
+
+1. Split Array: **[5, 3, 8, 6]** and **[2, 7, 4, 1]**
+2. Split Further: **[5, 3]**, **[8, 6]**, **[2, 7]**, **[4, 1]**
+3. Sort Halves:  
+   - **[5, 3] → [3, 5]**, **[8, 6] → [6, 8]** → Merge: **[3, 5, 6, 8]**  
+   - **[2, 7] → [2, 7]**, **[4, 1] → [1, 4]** → Merge: **[1, 2, 4, 7]**
+4. Final Merge: **[3, 5, 6, 8]** and **[1, 2, 4, 7]** → **[1, 2, 3, 4, 5, 6, 7, 8]**
+
+---
+
+### **3. Heap Sort**
+Heap Sort works by building a max-heap from the array and repeatedly removing the root element (largest) and rebuilding the heap.
+
+#### **Pseudocode:**
+```plaintext
+HeapSort(arr):
+    BuildMaxHeap(arr)
+    for i = arr.length - 1 to 1:
+        Swap arr[0] with arr[i]
+        Heapify(arr, 0, i)
+
+BuildMaxHeap(arr):
+    for i = arr.length / 2 - 1 downto 0:
+        Heapify(arr, i, arr.length)
+
+Heapify(arr, i, n):
+    largest = i
+    left = 2*i + 1
+    right = 2*i + 2
+    if left < n and arr[left] > arr[largest]:
+        largest = left
+    if right < n and arr[right] > arr[largest]:
+        largest = right
+    if largest != i:
+        Swap arr[i] and arr[largest]
+        Heapify(arr, largest, n)
+```
+
+#### **Step-by-Step Execution**:
+Initial Array: **[5, 3, 8, 6, 2, 7, 4, 1]**
+
+1. Build Max-Heap: **[8, 6, 7, 5, 2, 3, 4, 1]**
+2. Swap Root with Last Element and Heapify: **[7, 6, 4, 5, 2, 3, 1, 8]**
+3. Repeat Until Sorted:  
+   - **[6, 5, 4, 1, 2, 3, 7, 8]**  
+   - **[5, 3, 4, 1, 2, 6, 7, 8]**  
+   - **[4, 3, 2, 1, 5, 6, 7, 8]**  
+   - **[3, 1, 2, 4, 5, 6, 7, 8]**  
+   - **[2, 1, 3, 4, 5, 6, 7, 8]**  
+   - **[1, 2, 3, 4, 5, 6, 7, 8]**
+
+---
+
+### **4. Quick Sort**
+Quick Sort works by selecting a pivot element, partitioning the array into elements smaller and larger than the pivot, and recursively sorting the partitions.
+
+#### **Pseudocode:**
+```plaintext
+QuickSort(arr, low, high):
+    if low < high:
+        pi = Partition(arr, low, high)
+        QuickSort(arr, low, pi - 1)
+        QuickSort(arr, pi + 1, high)
+
+Partition(arr, low, high):
+    pivot = arr[high]
+    i = low - 1
+    for j = low to high - 1:
+        if arr[j] <= pivot:
+            i++
+            Swap arr[i] and arr[j]
+    Swap arr[i + 1] and arr[high]
+    return i + 1
+```
+
+#### **Step-by-Step Execution**:
+Initial Array: **[5, 3, 8, 6, 2, 7, 4, 1]**
+
+1. Select Pivot = `1`, Partition: **[1, 3, 8, 6, 2, 7, 4, 5]**
+2. Sort Left Partition: Pivot = `3` → **[1, 2, 3, 6, 8, 7, 4, 5]**
+3. Sort Right Partition: Pivot = `6` → **[1, 2, 3, 4, 5, 6, 7, 8]**
+
+Final Sorted Array: **[1, 2, 3, 4, 5, 6, 7, 8]**
+
+--- 
+
+### Final Results:
+All algorithms sorted the array **`[5, 3, 8, 6, 2, 7, 4, 1]`** into **`[1, 2, 3, 4, 5, 6, 7, 8]`** using different methods.
+
+---
+
+Below is a detailed overview of time complexities, including **best**, **worst**, and **average cases** for the requested algorithms and concepts:
+
+---
+
+### **1. Insertion Sort**
+- **Best Case (Already Sorted):** \(O(n)\)  
+- **Worst Case (Reversed Array):** \(O(n^2)\)  
+- **Average Case:** \(O(n^2)\)  
+- **Space Complexity:** \(O(1)\) (in-place sorting)  
+
+---
+
+### **2. Sorting Algorithms**
+#### a. Merge Sort
+- **Best, Worst, Average Case:** \(O(n \log n)\) (always divides array in halves)  
+- **Space Complexity:** \(O(n)\) (for temporary arrays)
+
+#### b. Heap Sort
+- **Best, Worst, Average Case:** \(O(n \log n)\)  
+- **Space Complexity:** \(O(1)\) (in-place sorting)
+
+#### c. Quick Sort
+- **Best Case (Balanced Partition):** \(O(n \log n)\)  
+- **Worst Case (Unbalanced Partition):** \(O(n^2)\) (occurs when pivot is the smallest or largest element)  
+- **Average Case:** \(O(n \log n)\)  
+- **Space Complexity:** \(O(\log n)\) (for recursion stack)
+
+---
+
+### **3. Algorithm Types & Methods**
+
+| **Type/Method**           | **Best Case**  | **Worst Case** | **Notes**                               |
+|----------------------------|----------------|----------------|-----------------------------------------|
+| **Master Theorem**         | \(O(T(n))\)    | \(O(T(n))\)    | Solves divide-and-conquer recurrences. |
+| **Substitution**           | Varies         | Varies         | Used to prove complexity bounds.       |
+| **Divide and Conquer**     | \(O(n \log n)\)| \(O(n \log n)\)| Examples: Merge Sort, Quick Sort       |
+| **Greedy Algorithm**       | Depends on problem | Depends      | Efficient for problems with local optimization. |
+| **Dynamic Programming**    | \(O(n^2)\) to \(O(2^n)\)| Depends | Solves overlapping subproblems (e.g., LCS). |
+| **Brute Force**            | \(O(n)\) to \(O(n!)\)| \(O(n!)\)  | Examines all possibilities.            |
+| **NP-Complete/Hard**       | No Polynomial Solution | No Polynomial Solution | Examples: Travelling Salesman, Knapsack |
+| **Backtracking**           | Depends       | Exponential    | Recursive exploration of states.       |
+
+---
+
+### **4. Specific Algorithm Time Complexities**
+
+#### a. Longest Common Subsequence (LCS)
+- **Best Case:** \(O(m \cdot n)\)  
+- **Worst Case:** \(O(m \cdot n)\)  
+- **Space Complexity:** \(O(m \cdot n)\) (for DP table)  
+
+#### b. Huffman Coding
+- **Best Case:** \(O(n \log n)\) (building priority queue/tree)  
+- **Worst Case:** \(O(n \log n)\)  
+- **Space Complexity:** \(O(n)\)
+
+#### c. Breadth-First Search (BFS)
+- **Time Complexity:** \(O(V + E)\), where \(V\) is the number of vertices, \(E\) is the number of edges.  
+- **Space Complexity:** \(O(V)\) (queue)
+
+#### d. Depth-First Search (DFS)
+- **Time Complexity:** \(O(V + E)\)  
+- **Space Complexity:** \(O(V)\) (stack)
+
+#### e. Dijkstra's Algorithm
+- **Time Complexity:**  
+  - \(O((V + E) \log V)\) (using a min-priority queue and adjacency list)  
+- **Space Complexity:** \(O(V + E)\)  
+
+#### f. Minimum Spanning Tree (MST) - Kruskal's Algorithm
+- **Time Complexity:** \(O(E \log E + E \alpha(V))\), where \( \alpha(V) \) is the inverse Ackermann function from the union-find.  
+- **Space Complexity:** \(O(V + E)\)
+
+---
+
+### **5. Backtracking Algorithms**
+#### a. 4-N Queen Problem
+- **Time Complexity:** \(O(n!)\) (in the worst case, must check all board positions).  
+- **Space Complexity:** \(O(n)\) (recursive stack for placing queens).
+
+#### b. Knapsack Problem
+- **Time Complexity (0/1 Knapsack):** \(O(n \cdot W)\), where \(n\) is the number of items and \(W\) is the knapsack capacity.  
+- **Space Complexity:** \(O(n \cdot W)\) (for DP table).
+
+---
+
+### **6. Rabin-Karp Algorithm (String Matching)**
+- **Best Case (No Matches):** \(O(n + m)\), where \(n\) is the text length and \(m\) is the pattern length.  
+- **Worst Case:** \(O(n \cdot m)\) (due to hash collisions).  
+- **Space Complexity:** \(O(1)\).
+
+---
+
+### **7. Travelling Salesman Problem (TSP)**
+- **Exact Algorithm (Brute Force):**  
+  - **Time Complexity:** \(O(n!)\)  
+  - **Space Complexity:** \(O(n)\) (for recursive stack).  
+- **Dynamic Programming (Held-Karp):**  
+  - **Time Complexity:** \(O(n^2 \cdot 2^n)\)  
+  - **Space Complexity:** \(O(n \cdot 2^n)\).
+
+---
+
+### **Summary Table**
+
+| **Algorithm**              | **Best**      | **Average**       | **Worst**        | **Space**        |
+|-----------------------------|---------------|-------------------|------------------|------------------|
+| Insertion Sort             | \(O(n)\)      | \(O(n^2)\)        | \(O(n^2)\)       | \(O(1)\)         |
+| Merge Sort                 | \(O(n \log n)\)| \(O(n \log n)\)   | \(O(n \log n)\)  | \(O(n)\)         |
+| Heap Sort                  | \(O(n \log n)\)| \(O(n \log n)\)   | \(O(n \log n)\)  | \(O(1)\)         |
+| Quick Sort                 | \(O(n \log n)\)| \(O(n \log n)\)   | \(O(n^2)\)       | \(O(\log n)\)    |
+| LCS                        | \(O(m \cdot n)\)| \(O(m \cdot n)\) | \(O(m \cdot n)\) | \(O(m \cdot n)\) |
+| Huffman Coding             | \(O(n \log n)\)| \(O(n \log n)\)   | \(O(n \log n)\)  | \(O(n)\)         |
+| BFS                        | \(O(V + E)\)   | \(O(V + E)\)      | \(O(V + E)\)     | \(O(V)\)         |
+| DFS                        | \(O(V + E)\)   | \(O(V + E)\)      | \(O(V + E)\)     | \(O(V)\)         |
+| Dijkstra                   | \(O(V + E \log V)\)| \(O(V + E \log V)\)| \(O(V + E \log V)\)| \(O(V + E)\) |
+| Kruskal MST                | \(O(E \log E)\)| \(O(E \log E)\)   | \(O(E \log E)\)  | \(O(V + E)\)     |
+| Backtracking (4-N Queen)   | \(O(n!)\)      | \(O(n!)\)         | \(O(n!)\)        | \(O(n)\)         |
+| 0/1 Knapsack               | \(O(n \cdot W)\)| \(O(n \cdot W)\) | \(O(n \cdot W)\) | \(O(n \cdot W)\) |
+| Rabin-Karp                 | \(O(n + m)\)   | \(O(n + m)\)      | \(O(n \cdot m)\) | \(O(1)\)         |
+| TSP (Exact)                | \(O(n!)\)      | \(O(n!)\)         | \(O(n!)\)        | \(O(n)\)         |
+| TSP (Dynamic Programming)  | \(O(n^2 \cdot 2^n)\)| \(O(n^2 \cdot 2^n)\)| \(O(n^2 \cdot 2^n)\)| \(O(n \cdot 2^n)\)|
+
+This summary provides an in-depth understanding of the computational complexity of the algorithms you requested. Let me know if you need further clarifications!
+
+---
 
 </span>
