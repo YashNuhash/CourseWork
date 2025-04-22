@@ -43,12 +43,6 @@ And more... all with proper syntax highlighting!
 - UI: Tailwind CSS because, come on, it's awesome
 - All hosted on Vercel and Render
 
-## Wrapping Up (1 minute)
-"And that's XOR! Pretty cool, right? You can try it out right now at xor-code.vercel.app. Perfect for:
-- Pair programming
-- Code reviews
-- Teaching coding
-- Or just vibing with your coding buddies
 
 Don't forget to check out the repo on GitHub, and let me know what features you'd like to see next!
 
@@ -156,4 +150,7 @@ Coding sessions are typically short
 - Users usually coordinate verbally/chat
 - Real-time feedback shows others' changes immediately
 - Users can see who else is in the room
-- Perfect for pair programming scenarios
+- Perfect for pair programming scenarios 
+
+
+So thanks for watching; The repository link in the description ; 
