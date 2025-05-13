@@ -353,6 +353,92 @@ Used widely in **automated systems** such as home appliances, vehicles, medical 
 ### 📌 Summary:
 A **microcontroller** is a low-cost, power-efficient chip used in **embedded systems** for performing dedicated control tasks. It is not suited for high-performance computing but is perfect for smart, automated applications.
 
+---
+
+# 🔗 Interfacing a Microcontroller with a Microprocessor
+
+Interfacing a **microcontroller** with a **microprocessor** allows them to work together — combining the microcontroller’s I/O capabilities with the microprocessor’s processing power.
+
+---
+
+## 🎯 Why Interface Them?
+
+- The **microprocessor** (like Intel 8085/8086) may lack built-in I/O features.
+- The **microcontroller** (like 8051, ATmega328, or STM32) has rich **I/O ports**, **timers**, **ADCs**, etc.
+- Interfacing lets the microprocessor **control external hardware** via the microcontroller.
+
+---
+
+## 🔌 Methods of Interfacing
+
+### 1. **Memory-Mapped I/O Method**
+
+- The microcontroller is treated like a memory device (like RAM or ROM).
+- The microprocessor uses standard **memory read/write instructions** to access the microcontroller.
+- **Address decoder** selects the microcontroller’s address range.
+
+#### ✅ Advantages:
+- Unified memory and I/O addressing.
+- Simplifies software design.
+
+---
+
+### 2. **I/O-Mapped (Isolated I/O) Method**
+
+- The microcontroller is treated as a peripheral.
+- The microprocessor uses **IN/OUT instructions** for communication.
+- A separate address space is used for I/O.
+
+#### ✅ Advantages:
+- Does not consume main memory address space.
+- Faster access to peripherals.
+
+---
+
+## 🔄 Communication Process
+
+1. **Data Bus**: Shared to transfer 8/16-bit data.
+2. **Address Bus**: Used by the microprocessor to select the microcontroller registers or ports.
+3. **Control Signals**:
+   - **RD (Read)** and **WR (Write)** from microprocessor control data flow.
+   - **ALE (Address Latch Enable)** to latch address lines.
+   - **IO/M** to differentiate between memory and I/O access.
+
+---
+
+## 📥 Example: Using Microcontroller as a Slave I/O Device
+
+- Microprocessor sends a command (like display data) to the microcontroller.
+- Microcontroller performs the action (like controlling an LED display).
+- Microcontroller may send status/data back (e.g., sensor values).
+
+---
+
+## 🧠 Real-World Use Case
+
+> **Interfacing 8051 Microcontroller with 8085 Microprocessor**
+- Microprocessor treats 8051 as an I/O device.
+- Data is transferred via 8-bit data bus.
+- Address decoder enables the 8051 at specific address.
+- Control signals ensure proper timing and data direction.
+
+---
+
+## 🔒 Key Considerations
+
+- Use **latches (like 74LS373)** to isolate address/data bus.
+- Avoid **bus conflicts** by controlling read/write access with enable signals.
+- Add **buffers** if long-distance or multiple devices are involved.
+
+---
+
+## 🖼️ Block Diagram (Conceptual)
+
+
+
+---
+
+
 # Embedded Systems Overview
 
 ## What is an Embedded System?
@@ -1336,6 +1422,154 @@ Computer
 - **Legacy Systems**: Older computers and printers still use SCSI interfaces.
 
 ---
+
+# 🔌 Power Bus in USB Protocol
+
+The **USB (Universal Serial Bus)** protocol not only transfers data between devices but also provides **power** over the same cable using the **power bus**. This makes USB a popular choice for powering small electronic devices like smartphones, keyboards, and microcontrollers.
+
+---
+
+## ⚡ What is the Power Bus?
+
+- The **Power Bus** in USB refers to the **VBUS (Voltage Bus)** and **GND (Ground)** lines.
+- It provides electrical power from the **host (like a PC)** to **connected devices (like a mouse or phone)**.
+
+---
+
+## 🧱 USB Cable Pinout
+
+A standard USB 2.0 cable has **4 wires**:
+
+| Pin | Name  | Function        |
+|-----|-------|-----------------|
+| 1   | VBUS  | +5V Power       |
+| 2   | D-    | Data -          |
+| 3   | D+    | Data +          |
+| 4   | GND   | Ground          |
+
+> In USB 3.x, extra data lines are added, but **VBUS and GND** remain standard.
+
+---
+
+## 🔋 Power Capabilities by USB Version
+
+| USB Version | Voltage (VBUS) | Max Current | Max Power Output |
+|-------------|----------------|-------------|------------------|
+| USB 1.1     | 5V             | 500 mA      | 2.5W             |
+| USB 2.0     | 5V             | 500 mA      | 2.5W             |
+| USB 3.0     | 5V             | 900 mA      | 4.5W             |
+| USB BC 1.2  | 5V             | 1.5A        | 7.5W             |
+| USB-C       | 5V to 20V      | Up to 5A    | Up to 100W       |
+
+---
+
+## 🧠 How It Works
+
+1. **Power Supply**: The host or hub provides 5V through the VBUS line.
+2. **Device Detection**: When a device connects, the host detects its presence by sensing current on the data lines.
+3. **Power Negotiation**: For higher power levels (like in USB-C), the device and host negotiate voltage and current.
+4. **Regulation**: Devices often use voltage regulators to step down 5V to lower voltages (e.g., 3.3V or 1.8V).
+
+---
+
+## 🔌 Real-World Examples
+
+- **USB Mouse/Keyboard**: Draws around 100–200 mA from the power bus.
+- **Arduino Boards**: Can be powered via USB using the VBUS.
+- **Smartphones**: Use USB for charging (via USB-C or Micro USB).
+- **USB-Powered Fans or Lights**: Operate directly off the 5V power line.
+
+---
+
+## 📦 Advantages of USB Power Bus
+
+- No need for external power adapters.
+- Safe and standardized voltage levels.
+- Hot-pluggable — connect/disconnect without turning off the device.
+- Supports both low-power and high-power devices (via USB Power Delivery).
+
+---
+
+## 🛑 Safety Features
+
+- USB ports include **current limiting** to prevent overloads.
+- USB hubs may cut power to a port if overcurrent is detected.
+
+---
+
+# 🧠 Interfacing Memory Chips and I/O Devices with a Microprocessor
+
+A microprocessor communicates with **memory** (like RAM/ROM) and **I/O devices** (like keyboards, displays, sensors) through well-defined **address**, **data**, and **control** lines.
+
+---
+
+## 📦 1. Memory Interfacing
+
+### 🔹 Purpose:
+To allow the microprocessor to read from or write to **RAM** or **ROM**.
+
+### 🔹 Required Signals:
+- **Address Bus**: Selects the memory location.
+- **Data Bus**: Transfers data to/from memory.
+- **Control Signals**:
+  - `RD̅`: Read control (active low)
+  - `WR̅`: Write control (active low)
+  - `CS̅` (Chip Select): Enables the specific memory chip
+
+### 🔹 How It Works:
+1. The microprocessor places the address on the address bus.
+2. `CS̅` enables the memory chip.
+3. `RD̅` or `WR̅` signals control the operation.
+4. Data is transferred on the data bus.
+
+> ✅ Example: 8085 microprocessor interfacing with 2KB ROM and 2KB RAM using address decoding.
+
+---
+
+## 🔌 2. I/O Interfacing
+
+### 🔹 Purpose:
+To connect **peripherals** (e.g., switches, LEDs, printers) to the microprocessor.
+
+### 🔹 Types:
+- **Memory-Mapped I/O**: I/O devices are treated like memory; share the same address space.
+- **Isolated I/O (Port-Mapped I/O)**: Separate I/O address space using instructions like `IN` and `OUT`.
+
+### 🔹 Required Signals:
+- **Address Bus**: To select the I/O device.
+- **Data Bus**: To send/receive data.
+- **Control Lines**:
+  - `IOR̅` (I/O Read)
+  - `IOW̅` (I/O Write)
+
+### 🔹 How It Works:
+1. Microprocessor outputs address of I/O device.
+2. Activates `IOR̅` or `IOW̅` signal.
+3. Data is transferred via the data bus.
+
+> ✅ Example: Interfacing an 8-bit output port (like 8255) with a microprocessor to control LEDs.
+
+---
+
+## 🧠 Summary
+
+| Component       | Signals Involved                     | Accessed Through         |
+|----------------|--------------------------------------|--------------------------|
+| Memory (RAM/ROM) | Address, Data, `RD̅`, `WR̅`, `CS̅`     | Memory address space     |
+| I/O Devices     | Address, Data, `IOR̅`, `IOW̅`, `CS̅`    | Memory-mapped or port-mapped |
+
+Efficient interfacing ensures proper communication between the CPU and external hardware.
+
+
+---
+
+## 📌 Summary
+
+- The **USB power bus (VBUS)** supplies power alongside data transfer.
+- Standard voltage is **5V**, with varying current based on USB version.
+- Enables compact and universal charging/powering solutions.
+
+
 ---
 
 
