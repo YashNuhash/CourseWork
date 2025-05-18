@@ -512,10 +512,208 @@ This contradicts the pumping lemma → Hence, **L is not regular**.
 
 **L = { aⁿbⁿ | n ≥ 0 } is NOT regular**, as it **fails** the conditions of the **Pumping Lemma**.
 
+---
 
+### 5(a) Prove that C = { aⁿbⁿcⁿ | n ≥ 0 } is **not a context-free language** using the **Pumping Lemma for CFLs**
 
+---
 
+### 📌 Given:
+**Language:**  
+C = { aⁿbⁿcⁿ | n ≥ 0 }  
+This means strings that have:
+- equal number of **a**’s, **b**’s, and **c**’s, in order.
 
+---
 
+### 🧠 Pumping Lemma for Context-Free Languages (CFL)
 
+If **C** is context-free, then there exists a constant **p (pumping length)** such that any string **s ∈ C** with **|s| ≥ p** can be written as:
+
+**s = uvwxy**, with:
+
+1. **|vwx| ≤ p**  
+2. **vx ≠ ε** (either **v** or **x** or both are non-empty)  
+3. For all **i ≥ 0**, the string **uvⁱw xⁱy ∈ C**
+
+---
+
+### 🚫 Assume C is context-free (for contradiction)
+
+Let’s choose a string:  
+**s = aᵖbᵖcᵖ ∈ C**  
+This string has equal numbers of a’s, b’s, and c’s.
+
+From the lemma: **s = uvwxy**, where **|vwx| ≤ p**
+
+So, **vwx** must fall **within** or at most **overlap two** of the three symbol blocks (aᵖ, bᵖ, cᵖ), but **cannot span all three** (since |vwx| ≤ p and each block is of length p).
+
+---
+
+### 🔍 Case Analysis
+
+We'll look at possible placements of **vwx**:
+
+#### Case 1: vwx lies entirely in the **a**’s
+- Pumping **v** and **x** increases or decreases the number of **a**’s only.
+- The number of a’s ≠ number of b’s and c’s → invalid string ∉ C
+
+#### Case 2: vwx lies entirely in the **b**’s
+- Pumping affects only **b**’s → again, number of b’s ≠ a’s or c’s → invalid
+
+#### Case 3: vwx lies entirely in the **c**’s
+- Pumping affects only **c**’s → same issue → string is not in C
+
+#### Case 4: vwx spans **a’s and b’s**
+- Pumping changes number of a’s and b’s but not c’s → a ≠ b ≠ c → not in C
+
+#### Case 5: vwx spans **b’s and c’s**
+- Again, pumping disturbs the balance between b’s and c’s → string ∉ C
+
+✅ In **every case**, pumping causes the number of a’s, b’s, and c’s to become **unequal**. So, **uvⁱw xⁱy ∉ C** for some i ≠ 1.
+
+---
+
+### ❌ Contradiction
+
+This contradicts the pumping lemma for context-free languages.
+
+---
+
+### ✅ Conclusion
+
+**C = { aⁿbⁿcⁿ | n ≥ 0 } is not context-free**, because it **violates the pumping lemma for CFLs**.
+
+---
+
+### 5(b) Context-Free Grammar (CFG) for:
+
+**Language A** = { aⁱ bʲ cᵏ | i = j **or** j = k, where i, j, k ≥ 0 }
+
+---
+
+We will construct a CFG **G** that generates all strings in A, which is the **union** of two simpler languages:
+
+---
+
+### 🧩 Let’s break down the language:
+
+- Let **L₁ = { aⁱ bⁱ cᵏ | i, k ≥ 0 }** — where **i = j**
+- Let **L₂ = { aⁱ bʲ cʲ | i ≥ 0, j ≥ 0 }** — where **j = k**
+
+Then:  
+**A = L₁ ∪ L₂**
+
+We can define separate CFGs for **L₁** and **L₂**, then combine them using a new start symbol.
+
+---
+
+### ✅ Grammar for L₁: (i = j)
+
+This handles strings where the number of **a**'s = number of **b**'s.
+
+```text
+S₁ → AB
+A → aAb | ε        // generates equal number of a's and b's
+B → cB | ε         // generates any number of c's
+
+```
+#### Grammar for L₂: (j = k)
+#### This handles strings where the number of b's = number of c's.
+
+```
+
+S₂ → AC
+A → aA | ε         // generates any number of a's
+C → bCc | ε        // generates equal number of b's and c's
+
+```
+#### Final Combined Grammar: Let the start symbol be S.
+
+```
+S → S₁ | S₂
+
+S₁ → AB
+A → aAb | ε
+B → cB | ε
+
+S₂ → AC
+A → aA | ε
+C → bCc | ε
+
+```
+---
+
+### 6(a) Church-Turing Thesis
+
+The **Church-Turing Thesis** is a foundational principle in theoretical computer science and computability theory.
+
+---
+
+### 📜 **Statement:**
+
+> "A function on the natural numbers is **computable** by a human using a well-defined procedure (algorithm), if and only if it is computable by a **Turing Machine**."
+
+---
+
+### 🧠 **Interpretation:**
+
+- It equates the intuitive idea of **"what can be computed"** with **"what a Turing Machine can compute."**
+- In simpler terms, **anything that can be computed algorithmically** can also be computed by a **Turing Machine**.
+
+---
+
+### 💡 **Significance:**
+
+- It provides a **formal model of computation**.
+- All models of computation (λ-calculus, recursive functions, etc.) that capture the intuitive notion of an algorithm **are equivalent** to Turing Machines.
+- Helps define the boundaries of **what is computable and what is not**.
+
+---
+
+### ⚠️ Note:
+
+The Church-Turing Thesis is **not a theorem** — it cannot be proven mathematically — rather, it is a **hypothesis** based on overwhelming empirical evidence.
+
+---
+
+### (6c) Description of the Turing Machine for L = {ww | w ∈ {0,1}*}
+
+#### Language:
+L = {ww | w ∈ {0,1}*}  
+This language consists of all strings where the first half is exactly the same as the second half.
+
+![alt text](image-3.png)
+
+#### Strategy:
+A Turing machine that accepts this language performs the following operations:
+
+1. **Mark the first unmarked symbol** (either `0` or `1`) from the left half.
+2. **Search for its corresponding match** in the second half of the string by moving to the rightmost unmarked part.
+3. **If a match is found**, mark both symbols and return to the leftmost unmarked symbol.
+4. **Repeat** until all symbols are matched.
+5. If the number of symbols is odd, or any mismatch occurs — **reject** the input.
+6. If all symbols are successfully matched — **accept** the input.
+
+#### Symbol Legend:
+- `X`: marked `0` from the first half
+- `Y`: marked `1` from the first half
+- `A`: marked `0` from the second half
+- `B`: marked `1` from the second half
+- `□`: blank symbol (end of tape)
+
+#### Informal Description of Key Transitions:
+- `q0`: Start state — scans for the first unmarked symbol (`0` or `1`).
+- `q1`: Marks `0` as `X`, transitions to a state to find the matching `0` in the second half.
+- `q2`: Marks `1` as `Y`, transitions to find matching `1`.
+- `q3`, `q4`: Move to the end of the tape to find unmarked symbols for matching.
+- `q5`, `q6`: Verify matches (`0`→`A`, `1`→`B`), then return to the left to continue.
+- `q_accept`: If all pairs are matched, accept the input.
+- `q_reject`: If mismatch or unbalanced input, reject.
+
+#### Notes:
+This machine assumes the string is stored on a tape with delimiters or blank symbols to detect boundaries.
+Since the language `{ww}` is **not context-free**, a Turing Machine is required (not a PDA).
+
+---
 
