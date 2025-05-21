@@ -1,3 +1,84 @@
+## Defintions: 
+
+## DFA to Regular Expression 
+
+![alt text](image-6.png)
+
+![alt text](image-7.png)
+
+---
+
+
+
+### Finite Automata : 
+
+![alt text](image-4.png)
+
+![alt text](image-5.png)
+
+![alt text](image-8.png) 
+
+![alt text](image-9.png)
+
+![alt text](image-10.png)
+
+
+### ✅ Proof: If A₁ and A₂ are regular languages, then A₁ ∪ A₂ is also regular
+
+---
+
+### 🧠 What We Know:
+- A language is **regular** if it can be recognized by a **finite automaton**.
+- A₁ and A₂ are both regular, so there exist DFAs (or NFAs) that recognize them.
+
+---
+
+### 🎯 Goal:
+Prove that **A₁ ∪ A₂** is regular.
+
+---
+
+### 🧾 Proof Idea (Using Closure Property):
+
+Regular languages are **closed under union**, which means:
+> If A₁ and A₂ are regular, then so is A₁ ∪ A₂.
+
+---
+
+### 👣 Step-by-Step Proof (using NFA Construction):
+
+Let:
+- M₁ = (Q₁, Σ, δ₁, q₁, F₁) be the NFA for A₁
+- M₂ = (Q₂, Σ, δ₂, q₂, F₂) be the NFA for A₂
+
+We construct a new NFA **M** such that:
+
+#### NFA M = (Q, Σ, δ, q₀, F) where:
+- Q = Q₁ ∪ Q₂ ∪ {q₀}  
+  (new start state `q₀`, plus all states from M₁ and M₂)
+- Σ = input alphabet (same for both)
+- δ:
+  - δ(q₀, ε) = {q₁, q₂}  
+    (ε-transition from the new start state to both M₁ and M₂)
+  - δ behaves like δ₁ on Q₁ and like δ₂ on Q₂
+- F = F₁ ∪ F₂  
+  (accept if either M₁ or M₂ accepts)
+
+---
+
+### ✅ Why It Works:
+- The new NFA M **nondeterministically chooses** to run either M₁ or M₂.
+- If either machine accepts the input, M accepts it.
+- Hence, **M accepts A₁ ∪ A₂**.
+
+---
+
+### 📌 Conclusion:
+Since we've constructed an NFA for A₁ ∪ A₂, and NFAs recognize regular languages,  
+→ **A₁ ∪ A₂ is regular**.
+
+
+
 ## 1 (a) Major Categories of Issues Addressed in the Theory of Computation
 
 The **Theory of Computation** deals with the fundamental capabilities and limitations of computers. It is generally divided into **three major categories**:
