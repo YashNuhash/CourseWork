@@ -22,6 +22,96 @@
 
 ![alt text](image-10.png)
 
+![alt text](image-11.png)
+
+
+## Questions PDA Related : 
+
+![alt text](image-12.png)
+
+### Solution : 
+
+![alt text](image-13.png)
+
+## PDA IDENTIFICATION : 
+
+![alt text](image-14.png) 
+
+### Solution : 
+
+### ✅ Question:
+**Identify the language that will be recognized by the following PDA (as shown in the diagram).**
+
+---
+
+### 🔍 PDA Analysis:
+
+We'll trace the PDA step-by-step to understand what language it accepts.
+
+---
+
+### 🔄 PDA States Overview:
+
+- `q0` → Initial state  
+- `q6` → Final (accepting) state  
+- Stack symbol `$` is used as a bottom marker
+
+---
+
+### 🧠 Key Transitions:
+
+#### From `q0` to `q1`:
+- Push `$` onto the stack.
+
+#### Loop at `q1`:  
+- Reads **`a`**, pushes **`a`** onto the stack.
+
+#### From `q1 → q3` → `q5`:
+- Transitions to process **`b`**s and **`c`**s.
+
+#### In `q3`:
+- On **`b`**, pop `a` (matching `b` with an earlier `a`).
+
+#### In `q5`:
+- On **`c`**, pop `a` (matching `c` with an earlier `a`).
+
+#### From `q5 → q6`:  
+- Accepts if all `a`s are matched and stack reaches bottom `$`.
+
+---
+
+### ✅ Final Observations:
+
+- The PDA accepts strings that:
+  - Begin with **some number of `a`s**,  
+  - Followed by **some number of `b`s**,  
+  - Followed by **some number of `c`s**,  
+  - Where the **total number of `b`s and `c`s equals the number of `a`s**.
+
+---
+
+### 📘 Language Accepted by the PDA:
+
+**L = { aⁿ bⁱ cʲ | n = i + j, n ≥ 0, i ≥ 0, j ≥ 0 }**
+
+This means:
+- The number of `a`s must equal the total number of `b`s and `c`s combined.
+- The order must be: `a`s → `b`s → `c`s
+
+---
+
+### ✅ Example Strings in L:
+- `ε` (empty string) ✅
+- `abc` ✅ (1 `a`, 1 `b`, 1 `c` → total `b + c = 2` ❌ → Not accepted!)
+- `aab` ✅ (`n=2`, `i=2`, `j=0`)
+- `aaabc` ✅ (`n=3`, `i=1`, `j=2`)
+- `aaa` ❌ (no `b` or `c`, so not matched)
+
+---
+
+### ✅ Final Answer:
+**L = { aⁿ bⁱ cʲ | n = i + j, n ≥ 0, i ≥ 0, j ≥ 0 }**
+
 
 ### ✅ Proof: If A₁ and A₂ are regular languages, then A₁ ∪ A₂ is also regular
 
@@ -76,6 +166,53 @@ We construct a new NFA **M** such that:
 ### 📌 Conclusion:
 Since we've constructed an NFA for A₁ ∪ A₂, and NFAs recognize regular languages,  
 → **A₁ ∪ A₂ is regular**.
+
+---
+
+### (c) ✅ Statement: *Every regular language is context-free.*
+
+---
+
+### ✅ Claim: TRUE
+
+---
+
+### 🧠 Reasoning:
+
+- **Regular languages** are the simplest class of languages, recognized by **finite automata**.
+- **Context-free languages (CFLs)** are recognized by **pushdown automata (PDAs)**, which are more powerful than finite automata.
+- Therefore, everything that a finite automaton (FA) can recognize, a pushdown automaton (PDA) can also recognize by simply **ignoring its stack**.
+
+---
+
+### 📌 Formal Proof Outline:
+
+Let `L` be a regular language.  
+Then there exists a **DFA** or **NFA** `M = (Q, Σ, δ, q₀, F)` that accepts `L`.
+
+We can construct a **PDA** `P` that simulates this FA:
+
+#### PDA P = (Q, Σ, Γ, δ', q₀, Z₀, F)
+Where:
+- `Q`, `Σ`, `q₀`, and `F` are the same as in the FA
+- `Γ` (stack alphabet) can be anything (e.g., `{Z₀}` as a dummy)
+- `δ'` transitions exactly like the FA but **ignores the stack**
+
+This PDA **simulates the FA** by:
+- Reading input symbols
+- Changing state as per δ
+- Never using the stack (or using it in a dummy way)
+
+Thus, this PDA accepts the same language `L`.
+
+---
+
+### ✅ Conclusion:
+
+> Every regular language can be recognized by a PDA (with or without using the stack),  
+> so **every regular language is context-free**.
+
+✔️ **Hence, the statement is TRUE.**
 
 
 
