@@ -1,3 +1,11 @@
+![alt text](image-3.png)
+
+---
+
+## Bottom UP Parsing : 
+![alt text](image-1.png) 
+![alt text](image-2.png)
+
 
 ## **1(a) What tasks are performed in the front-end and back-end of a compiler, and why? How are the phases related to the passes?**
 
@@ -478,6 +486,238 @@ If the parser expects `)` but finds `;`, it may skip ahead to the next `)` or `;
 * Helps provide **better user feedback** during compilation.
 
 ---
+
+## **6(a) Difference Between Parse Tree and Abstract Syntax Tree (AST)**
+
+| **Aspect**     | **Parse Tree**                                                    | **Abstract Syntax Tree (AST)**                                       |
+| -------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- |
+| **Definition** | A tree that shows **all grammar rules** used during parsing.      | A **simplified** tree that shows the **logic** or structure of code. |
+| **Includes**   | Every terminal and non-terminal, including symbols like `(`, `)`. | Only **important tokens** (like operators, identifiers, etc.).       |
+| **Size**       | **Larger and more detailed**.                                     | **Smaller and cleaner**.                                             |
+| **Purpose**    | Mainly used in **syntax analysis**.                               | Used in **semantic analysis**, optimization, and code generation.    |
+| **Visual**     | Matches exactly how grammar is written.                           | Focuses on what the code **means**.                                  |
+
+---
+
+### ✅ Example: For Expression `a + b * c`
+
+#### **Parse Tree** (Shows all steps)
+
+```
+         E
+      /  |  \
+     E   +   T
+     |      / | \
+     T     T  *  F
+     |     |     |
+     F     F     c
+     |     |
+     a     b
+```
+
+#### **AST** (Simplified)
+
+```
+      +
+     / \
+    a   *
+       / \
+      b   c
+```
+
+
+
+---
+
+## **6(b) Semantics-Preserving (Local) Optimizations in Code Optimization**
+
+### 🔹 **What Does Semantics-Preserving Mean?**
+
+It means the optimization **does not change the meaning** (output or behavior) of the program.
+
+✅ After optimization, the program **still works the same**, just **faster or better**.
+
+---
+
+## 🧠 **What Are Local Optimizations?**
+
+* Local optimization works **inside a small block of code**, usually within a **basic block** (a straight-line code with no jumps).
+* It tries to **make code shorter, faster, or cleaner** without changing what it does.
+
+---
+
+## ⚙️ **Examples of Local Optimizations**
+
+| **Optimization**             | **Description**                                                                 |
+| ---------------------------- | ------------------------------------------------------------------------------- |
+| **Constant Folding**         | Replace constant expressions with their result.  <br>`x = 3 * 4` → `x = 12`     |
+| **Constant Propagation**     | Replace a variable with its known constant value. <br>`a = 5; b = a` → `b = 5`  |
+| **Dead Code Elimination**    | Remove code that doesn’t affect the result. <br>`if (false) { doSomething(); }` |
+| **Strength Reduction**       | Replace expensive operations with cheaper ones. <br>`x = y * 2` → `x = y + y`   |
+| **Algebraic Simplification** | Simplify expressions. <br>`x = x + 0` → `x` or `x = x * 1` → `x`                |
+
+---
+
+## 🎯 **Why It’s Useful**
+
+* Makes the code **run faster**
+* Uses **less memory**
+* Makes **compilation smarter**
+* Helps in **generating efficient machine code**
+
+---
+
+![alt text](image.png)
+
+---
+
+# Lecture 3 : 
+
+## **Example: Leftmost and Rightmost Derivations**
+
+### 🎯 **Given Grammar**
+
+```
+E → E + E  
+E → E * E  
+E → ( E )  
+E → id
+```
+
+### 📝 **Input String:**
+
+```
+(id + id) * id
+```
+
+---
+
+## ✅ **1. Leftmost Derivation**
+
+We always expand the **leftmost non-terminal first**.
+
+```
+E
+→ E * E
+→ ( E ) * E
+→ ( E + E ) * E
+→ ( id + E ) * E
+→ ( id + id ) * E
+→ ( id + id ) * id
+```
+
+---
+
+## ✅ **2. Rightmost Derivation**
+
+We always expand the **rightmost non-terminal first**.
+
+```
+E
+→ E * E
+→ E * id
+→ ( E ) * id
+→ ( E + E ) * id
+→ ( id + E ) * id
+→ ( id + id ) * id
+```
+
+---
+
+### ✅ Final Answer:
+
+| **Derivation Type** | **Steps**                                                                                     |
+| ------------------- | --------------------------------------------------------------------------------------------- |
+| **Leftmost**        | `E → E * E → ( E ) * E → ( E + E ) * E → ( id + E ) * E → ( id + id ) * E → ( id + id ) * id` |
+| **Rightmost**       | `E → E * E → E * id → ( E ) * id → ( E + E ) * id → ( id + E ) * id → ( id + id ) * id`       |
+
+---
+
+
+## 🎯 **Given Grammar (Unambiguous for Arithmetic Expressions)**
+
+```
+E → E + T | T  
+T → T * F | F  
+F → ( E ) | id
+```
+
+---
+
+## ✅ **1. Leftmost Derivation of `id + id * id`**
+
+We follow operator precedence: `*` has **higher precedence** than `+`.
+
+### **Leftmost Derivation:**
+
+```
+E
+→ E + T
+→ T + T
+→ F + T
+→ id + T
+→ id + T * F
+→ id + F * F
+→ id + id * F
+→ id + id * id
+```
+
+---
+
+## ✅ **2. Leftmost Derivation of `id * id + id`**
+
+Again, `*` is done **first** due to higher precedence.
+
+### **Leftmost Derivation:**
+
+```
+E
+→ E + T
+→ T + T
+→ T * F + T
+→ F * F + T
+→ id * F + T
+→ id * id + T
+→ id * id + F
+→ id * id + id
+```
+
+---
+
+## 🌳 **3. Parse Trees**
+
+### **A. Parse Tree for `id + id * id`**
+
+```
+         E
+       / | \
+      E  +  T
+      |     |
+      T     T * F
+      |     |   |
+      F     F   id
+      |     |
+     id    id
+```
+
+---
+
+### **B. Parse Tree for `id * id + id`**
+
+```
+           E
+         / | \
+        E  +  T
+       / \     |
+      T  *  F  F
+      |     |   |
+      F     id id
+      |
+     id
+```
+
+---
+
 
 
 
