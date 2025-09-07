@@ -209,3 +209,63 @@ confusion_matrix_interpretable = [
 ```
 
 Use this data to create comprehensive visualizations that support your methodology and demonstrate the effectiveness of your interpretable framework.
+
+┌─────────────────────────────────────────┐
+│           Input Layer                   │
+│     Raw Bangla news text               │
+│     (headline + content)               │
+└─────────────┬───────────────────────────┘
+              │
+         ┌────┴────┐
+         ▼         ▼
+    ┌─────────┐   ┌──────────────────────────┐
+    │Tokenizer│   │   Feature Extractors     │ ← Interpretable
+    └────┬────┘   └─────────┬────────────────┘   Features
+         │768              │
+         ▼                 ▼
+┌──────────────────┐   ┌──────────────────────┐
+│  Bangla-BERT     │   │ Psycholinguistic     │→ 17 features
+│     Encoder      │   │ Feature Extractor    │
+└─────────┬────────┘   └──────────────────────┘
+          │768                     │
+          │            ┌──────────────────────┐
+          │            │  Discourse Analyzer  │→ 5 features  
+          │            └─────────┬────────────┘
+          │                      │
+          └──────┐        ┌──────┘
+                 │        │
+                 ▼        ▼
+         ┌─────────────────────────┐
+         │     Concatenation       │ ← 768 + 17 + 5 = 790
+         │     (768+17+5=790)      │
+         └──────────┬──────────────┘
+                    │790
+                    ▼
+         ┌─────────────────────────┐
+         │   Feature Fusion Layer  │ ← Feature Fusion
+         │   Linear(790→768)       │
+         │   + Dropout(0.3)        │
+         │   + ReLU                │
+         └──────────┬──────────────┘
+                    │768
+                    ▼
+         ┌─────────────────────────┐
+         │  Classification Head    │ ← Classification Head
+         │   Linear(768→4)         │
+         │   + Softmax             │
+         └──────────┬──────────────┘
+                    │
+                    ▼
+         ┌─────────────────────────┐
+         │ 4-class probability     │
+         │     distribution        │
+         │                         │
+         │ Class 0: Completely Fake│
+         │ Class 1: Mostly Fake    │
+         │ Class 2: Mixed/Partial  │
+         │ Class 3: Authentic      │
+         └─────────────────────────┘
+
+Legend:
+→ Deep Representations (left path)
+→ Interpretable Features (right path)
