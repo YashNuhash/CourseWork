@@ -931,7 +931,84 @@ In AMI, a neutral zero voltage represents a binary `0`, while binary `1`s are re
 
 ### 3.3 [GFG: Digital Modulation Techniques ](https://www.geeksforgeeks.org/electronics-engineering/digital-modulation-techniques/)
 
+## Digital Modulation
+Digital modulation offers several advantages over analog modulation, including **greater information capacity**, **high data security**, and **quicker system availability**. These techniques can convey larger amounts of data, leading to a higher demand for their use in modern communication systems. Digital modulation also allows for the combination of different techniques to achieve specific communication goals.
+
+---
+
+## Amplitude Shift Keying (ASK)
+
+![alt text](image-21.png)
+
+**Amplitude Shift Keying (ASK)** is a digital modulation technique where the amplitude of a carrier signal is varied to represent binary data. The amplitude of the output signal depends on the input data, typically producing a zero-level output for a LOW input (binary 0) and the carrier output for a HIGH input (binary 1).
+
+
+
+---
+
+## Frequency Shift Keying (FSK)
+
+![alt text](image-20.png)
+
+In **Frequency Shift Keying (FSK)**, the frequency of the carrier signal is varied to represent binary data. The output signal's frequency will be either high or low, depending on the input data. A binary HIGH input results in a high-frequency output, while a binary LOW input results in a low-frequency output. The binary 1s and 0s are referred to as **Mark** and **Space** frequencies, respectively.
+
+
+
+---
+
+## Phase Shift Keying (PSK)
+![alt text](image-22.png)
+**Phase Shift Keying (PSK)** is a digital modulation technique where the phase of the carrier signal is shifted to represent binary data. This technique is widely used in wireless LANs, biometrics, and Bluetooth communications. PSK is primarily of two types: Binary Phase Shift Keying (BPSK) and Quadrature Phase Shift Keying (QPSK). A third variant is Differential Phase Shift Keying (DPSK).
+
+
+### Quadrature Phase Shift Keying (QPSK)
+
+![alt text](image-23.png)
+
+**QPSK** is an extension of BPSK that shifts the carrier's phase by 0°, 90°, 180°, and 270°. QPSK can transmit two bits of digital information at a time, called **dibits**. By converting digital bits into bit-pairs, it halves the data bit rate, which allows for increased efficiency and space for other users.
+
+
+## Quadrature Amplitude Modulation (QAM)
+**Quadrature Amplitude Modulation (QAM)** is a modulation technique that combines both **Amplitude Shift Keying (ASK)** and **Phase Shift Keying (PSK)**. It can be used in both analog and digital modulation schemes and is also known as "Quadrature carrier multiplexing."
+
+
+## Key Concepts of QAM
+* **Combination of Techniques**: QAM combines two amplitude-modulated waves into a single channel. This approach helps to overcome the limitations of PSK, where small phase differences can be hard for equipment to distinguish, thus limiting the potential bit rate.
+* **Increased Bandwidth**: By modulating two individual signals and transmitting them over a single channel, QAM effectively increases the channel's bandwidth.
+* **Efficiency**: QAM allows for the transmission of two message signals over the same channel, which makes it more spectrally efficient.
+* **Bandwidth Requirement**: QAM requires the same minimum bandwidth as a combined ASK/PSK transmission, while offering the same advantages of PSK over ASK.
+
+
+
 ### 3.4 [PCM and Delta Modulation](https://www.geeksforgeeks.org/computer-networks/difference-between-pulse-code-modulation-pcm-and-delta-modulation-dm/)
+
+**Pulse Code Modulation (PCM):** 
+
+![alt text](image-24.png)
+
+is an analog-to-digital conversion technique that represents analog signals digitally. It is widely used and provides a good signal-to-noise ratio. The PCM process involves three main steps: sampling, quantization, and encoding. During encoding, multiple bits are used to represent each sample, which results in a high-fidelity signal but also requires a high bandwidth for transmission. 
+
+---
+
+**Delta Modulation (DM):** 
+
+![alt text](image-25.png)
+
+is a simpler form of analog-to-digital and digital-to-analog signal conversion. It is considered the simplest form of Differential Pulse Code Modulation (DPCM). DM uses only **one bit** per sample to represent the difference between the current and previous sample. If the current sample is larger than the previous one, a '1' is transmitted, and if it's smaller, a '0' is sent. Because it transmits only one bit per sample, DM requires a lower bandwidth compared to PCM, but this simplicity can lead to a lower signal-to-noise ratio.
+
+---
+
+### PCM vs. DM: Key Differences
+
+| Feature | Pulse Code Modulation (PCM) | Delta Modulation (DM) |
+| :--- | :--- | :--- |
+| **Bits per Sample** | Uses multiple bits (e.g., 4, 8, 16) | Uses only one bit per sample |
+| **Bandwidth** | Requires higher bandwidth | Requires lower bandwidth |
+| **Signal-to-Noise Ratio** | Good or sensible signal-to-noise ratio | Poor signal-to-noise ratio |
+| **Complexity** | More complex to implement | Simpler to implement |
+| **Feedback** | No feedback in the transmitter/receiver | Has a feedback loop in the transmitter |
+
+---
 
 ### 3.5 Calculative Examples of 3.4 will be added below
 
@@ -1213,7 +1290,78 @@ Linear block codes are **error control codes** where a block of $k$ information 
 
 ### 5.5.1 [Flow Control](https://www.geeksforgeeks.org/computer-networks/flow-control-in-data-link-layer/)
 
+
+## Flow Control in the Data Link Layer
+
+**Flow control** is a crucial design issue in the Data Link Layer. It’s a mechanism that ensures a sender doesn't overwhelm a receiver with data by transmitting information too fast. Essentially, it acts as a speed-matching mechanism, allowing two devices with different processing speeds to communicate effectively. This is vital because a receiver has a limited amount of memory, or a **buffer**, to store incoming data before processing it. Flow control manages the rate at which a sender transmits data frames and dictates when it must pause to wait for an acknowledgment from the receiver.
+
+
+
+---
+
+## Approaches to Flow Control
+
+![alt text](image-26.png)
+
+There are two primary approaches to flow control:
+
+* **Feedback-based Flow Control**: In this method, the sender transmits data and then waits for a response (an acknowledgment) from the receiver. The receiver's feedback informs the sender whether to continue sending more data or to pause.
+* **Rate-based Flow Control**: This approach uses a built-in mechanism in the communication protocol to limit the sender's data transmission rate without needing a direct acknowledgment from the receiver. This is useful when the receiver can't keep up with the sender's speed.
+
+---
+
+## Techniques of Flow Control
+
+The two main techniques for implementing flow control in the Data Link Layer are:
+
+![alt text](image-27.png)
+
+### 1. Stop-and-Wait Flow Control
+
+This is the simplest form of flow control. The sender breaks down a message into multiple frames. It then sends one frame at a time and stops, waiting for an acknowledgment from the receiver. Once the receiver confirms it has received the frame, the sender sends the next one. This continues until the entire message is transmitted. 
+
+* **Advantages**: It's a very simple and easy-to-implement method. It's also highly accurate since each frame is checked and acknowledged individually.
+* **Disadvantages**: It's **inefficient and slow**, especially over long-distance networks, because only one frame can be "in transit" at a time. The sender remains idle while waiting for the acknowledgment, which can lead to low network utilization.
+
+### 2. Sliding Window Flow Control
+
+This method is more advanced and widely used in the Data Link Layer. It allows the sender to transmit multiple data frames before waiting for an acknowledgment.  The sender and receiver agree on a "window size," which is the total number of unacknowledged frames the sender can have "in-flight" at any given time. This significantly improves network throughput and efficiency.
+
+* **Advantages**: It performs much better than Stop-and-Wait, allowing for **multiple frames to be sent consecutively**, which increases efficiency and network utilization.
+* **Disadvantages**: This method is more complex to implement at both the sender and receiver. There’s also a potential for data frames to be received out of sequence, which requires additional mechanisms to reorder them correctly.
+
 ### 5.5.2 [Error Control in Data Link Layer](https://www.geeksforgeeks.org/computer-networks/error-control-in-data-link-layer/)
+
+
+## Error Control in the Data Link Layer
+
+Error control in the Data Link Layer ensures that data frames are transmitted accurately between sender and receiver. This involves detecting and re-transmitting frames that are lost or corrupted during transmission. When an error is detected, the process of re-transmitting the data is called **ARQ (Automatic Repeat Request)**.
+
+---
+
+### Ways of Doing Error Control
+
+Error control can be broken down into two main processes:
+
+* **Error Detection**: This is the process of identifying if an error has occurred in a data frame due to noise or other impairments. It's about knowing that the data is corrupted.
+* **Error Correction**: This is the process of reconstructing or fixing the original, error-free data. Error correction methods are typically more complex and costly than detection methods.
+
+---
+
+### Techniques for Error Control
+
+Various ARQ protocols are used for error control:
+
+#### 1. Stop-and-Wait ARQ
+
+This is a simple protocol also known as the alternating bit protocol.  The sender transmits a single data frame and then **stops** and **waits** for an acknowledgment (ACK) from the receiver. If the sender doesn't receive the ACK within a specific time-out period, it re-sends the frame and waits again. This process continues until an ACK is received.
+
+#### 2. Sliding Window ARQ
+
+This technique is used for continuous transmission and is more efficient than Stop-and-Wait. It allows the sender to transmit multiple frames without waiting for an ACK for each one, using a "window" of frames. There are two main types:
+
+* **Go-Back-N ARQ**: The sender continuously sends frames up to the window size without waiting for an ACK. If a frame is lost or corrupted, the receiver discards that frame and all subsequent frames it receives until the correct frame is re-sent. The sender, upon timing out or receiving a negative acknowledgment (NAK), re-transmits the lost frame and **all frames that followed it**.
+* **Selective Repeat ARQ**: In this more efficient protocol, the sender only re-transmits the specific frames that were lost or corrupted. The receiver buffers the frames that arrive out of order and waits for the re-transmitted frame to arrive before delivering the data to the upper layers.  This reduces the number of re-transmissions but adds complexity to the receiver's buffering process. The key difference between this and Go-Back-N is that only the lost frame is re-sent, not the entire window.
 
 ### 5.5.3.1 [Stop and Wait ARQ](https://www.geeksforgeeks.org/computer-networks/stop-and-wait-arq/)
 
